@@ -13,7 +13,8 @@ We as developers have friends and relatives who own small businesses, and they c
 
 **Architectural Diagram Mapping**
 
-![Architectural Diagram](https://github.com/info441-sp21/final-project/arch-diagram.jpeg)
+![Architectural Diagram](arch-diagram.jpeg)
+
 
 **Summary Table of User Stories**
 
