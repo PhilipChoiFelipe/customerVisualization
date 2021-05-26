@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/info441-sp21/final-project/server/gateway/models/items"
+	"final-project/server/gateway/models/items"
 )
 
 type CustomerStorage struct {
@@ -120,6 +120,7 @@ func (cs *CustomerStorage) Insert(customer *Customer) (*Customer, error) {
 //Update updates existing customer with given id and returns updated customer
 func (cs *CustomerStorage) Update(customerId int64, updates *NameUpdates) (*Customer, error) {
 	query := "update customers set first_name = ?, last_name = ? where id = ?"
+	// TODO: should it be Exec() here?
 	_, err := cs.sqlsess.Query(query, updates.FirstName, updates.LastName, customerId)
 	if err != nil {
 		return nil, err
@@ -134,6 +135,7 @@ func (cs *CustomerStorage) Update(customerId int64, updates *NameUpdates) (*Cust
 //Delete deletes customer with given customer id
 func (cs *CustomerStorage) Delete(customerId int64) error {
 	query := "delete customers where id = customerId"
+	// TODO: should it be Exec() here?
 	_, err := cs.sqlsess.Query(query, customerId)
 	if err != nil {
 		return err

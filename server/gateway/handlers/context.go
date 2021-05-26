@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"github.com/info441-sp21/final-project/server/gateway/models/customers"
-	"github.com/info441-sp21/final-project/server/gateway/models/users"
-	"github.com/info441-sp21/final-project/server/gateway/sessions"
+	"final-project/server/gateway/models/customers"
+	"final-project/server/gateway/models/users"
+	"final-project/server/gateway/sessions"
 )
 
 type HttpHandler struct {

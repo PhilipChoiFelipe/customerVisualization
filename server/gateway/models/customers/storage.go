@@ -10,15 +10,15 @@ var ErrCustomerNotInserted = errors.New("failed to insert new customer")
 
 var ErrCustomerNotUpdated = errors.New("failed to update customer")
 
-var ErrCusomerNotDeleted = errors.New("failed to delete customer")
+var ErrCustomerNotDeleted = errors.New("failed to delete customer")
 
 type Storage interface {
 	//GetByID returns the customer with the given ID
-	GetById(customerId int64) (*Customer, er
+	GetById(customerId int64) (*Customer, error)
 	//GetByItemId returns the customer
 	GetByItemId(itemId int64) ([]*Customer, error)
 
-	//GetCustomers returns all the cusomer of current user
+	//GetCustomers returns all the customer of current user
 	GetCustomers() ([]*Customer, error)
 
 	//Insert inserts new customer and returns inserted customer

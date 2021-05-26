@@ -16,11 +16,11 @@ type Customer struct {
 	LastName   string     `json:"lastName"`
 	Ethnicity  string     `json:"ethnicity"`
 	Gender     string     `json:"gender"`
-	Birthday   time.Time  `json:"birthday"` // TODO: better datatype?
+	Birthday   time.Time  `json:"birthday"` // TOASK: better datatype?
 	PostalCode int64      `json:"postalCode"`
 	LastVisted time.Time  `json:"lastVisited"`
 	DisChannel string     `json:"disChannel"`
-	FavItem    items.Item `json:"favItem"` // TODO: item struct type better as json object? wbout sql?
+	FavItem    *items.Item `json:"favItem"` // TOASK: item struct type better as json object? wbout sql?
 }
 
 // https://stackoverflow.com/questions/47335697/golang-decode-json-request-in-nested-struct-and-insert-in-db-as-blob
@@ -39,7 +39,7 @@ func (c *Customer) ApplyNameUpdates(updates *NameUpdates) error {
 	return nil
 }
 
-// TODO: do we need update struct?
+// TOASK: do we need update struct?
 func (c *Customer) ApplyFavItemUpdates(item *items.Item) error {
 	if item == nil {
 		return fmt.Errorf("empty updating value")

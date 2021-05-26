@@ -8,10 +8,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// TODO: delete all store ID from user struct due to schema update
+
 //bcryptCost is the default bcrypt cost to use when hashing passwords
 var bcryptCost = 13
 
-//User represents a user account in the database
+//User (business owners) represents a user account in the database
 type User struct {
 	ID        int64  `json:"id"`
 	Email     string `json:"-"` //never JSON encoded/decoded

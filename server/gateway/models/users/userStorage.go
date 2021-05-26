@@ -13,6 +13,8 @@ type UserStorage struct {
 	sqlsess *sql.DB
 }
 
+// TODO: delete all store ID from user struct due to schema update
+
 //User Storage implementation
 
 //NewSqlStorage returns new sql connection instance
