@@ -5,11 +5,14 @@ create table if not exists users (
     passhash    binary(64) not null,
     first_name  varchar(128) not null,
     last_name   varchar(128) not null,
-    store_id    int not null references stores(id)
+    -- store_id    int not null references stores(id)
 );
+
+-- Updates: moved store_id because one user can have multiple stores
 
 create table if not exists stores (
     id          int not null auto_increment primary key,
+    user_id     int not null references users(id),
     store_name       varchar(225) not null,
     store_location     varchar(225) not null
 );
