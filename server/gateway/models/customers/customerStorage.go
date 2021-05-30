@@ -2,9 +2,7 @@ package customers
 
 import (
 	"database/sql"
-	"time"
-
-	"final-project/server/gateway/models/items"
+	"fmt"
 )
 
 type CustomerStorage struct {
@@ -29,14 +27,14 @@ var (
 	LastName   string
 	Ethnicity  string
 	Gender     string
-	Birthday   time.Time
+	Birthday   string
 	PostalCode int64
-	LastVisted time.Time
+	LastVisted string
 	DisChannel string
 	ItemId     int64
-	FavItem    *items.Item
-	result     []*Customer
 )
+
+//from.Format("2006-01-02") to.Format("2006-01-02")
 
 //GetById finds id of customers in DB and returns the customer
 func (cs *CustomerStorage) GetById(customerId int64) (*Customer, error) {
@@ -46,16 +44,12 @@ func (cs *CustomerStorage) GetById(customerId int64) (*Customer, error) {
 	if err != nil {
 		return nil, err
 	}
-	itemQuery := "select * from items where id = ?"
-	err = cs.sqlsess.QueryRow(itemQuery, ItemId).Scan(&FavItem)
-	if err != nil {
-		return nil, err
-	}
-	return &Customer{ID, UserID, StoreID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisted, DisChannel, FavItem}, nil
+	return &Customer{ID, UserID, StoreID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisted, DisChannel, ItemId}, nil
 }
 
 //GetByItemId finds itemId of customers in DB and returns the customers with certain favorite ids
 func (cs *CustomerStorage) GetByItemId(itemId int64) ([]*Customer, error) {
+	var result []*Customer
 	query := "select id, user_id, store_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item from customers where fav_item = ?"
 	rows, err := cs.sqlsess.Query(query, itemId)
 	if err != nil {
@@ -64,12 +58,7 @@ func (cs *CustomerStorage) GetByItemId(itemId int64) ([]*Customer, error) {
 	defer rows.Close()
 	for rows.Next() {
 		rows.Scan(&ID, &UserID, &StoreID, &FirstName, &LastName, &Ethnicity, &Gender, &Birthday, &PostalCode, &LastVisted, &DisChannel, &ItemId)
-		itemQuery := "select * from items where id = ?"
-		err = cs.sqlsess.QueryRow(itemQuery, itemId).Scan(&FavItem)
-		if err != nil {
-			return nil, err
-		}
-		returnedCus := &Customer{ID, UserID, StoreID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisted, DisChannel, FavItem}
+		returnedCus := &Customer{ID, UserID, StoreID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisted, DisChannel, ItemId}
 		result = append(result, returnedCus)
 	}
 	if len(result) == 0 {
@@ -78,22 +67,18 @@ func (cs *CustomerStorage) GetByItemId(itemId int64) ([]*Customer, error) {
 	return result, nil
 }
 
-//GetByItemId returns the all customers in DB
-func (cs *CustomerStorage) GetCustomers() ([]*Customer, error) {
-	query := "select id, user_id, store_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item from customers"
-	rows, err := cs.sqlsess.Query(query)
+//GetCustomers returns the all customers in DB
+func (cs *CustomerStorage) GetCustomers(user_id int64) ([]*Customer, error) {
+	var result []*Customer
+	query := "select id, user_id, store_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item from customers where user_id = ?"
+	rows, err := cs.sqlsess.Query(query, user_id)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		rows.Scan(&ID, &UserID, &StoreID, &FirstName, &LastName, &Ethnicity, &Gender, &Birthday, &PostalCode, &LastVisted, &DisChannel, &ItemId)
-		itemQuery := "select * from items where id = ?"
-		err = cs.sqlsess.QueryRow(itemQuery, ItemId).Scan(&FavItem)
-		if err != nil {
-			return nil, err
-		}
-		returnedCus := &Customer{ID, UserID, StoreID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisted, DisChannel, FavItem}
+		returnedCus := &Customer{ID, UserID, StoreID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisted, DisChannel, ItemId}
 		result = append(result, returnedCus)
 	}
 	if len(result) == 0 {
@@ -105,7 +90,7 @@ func (cs *CustomerStorage) GetCustomers() ([]*Customer, error) {
 //Insert inserts new customer into database and returns inserted customer
 func (cs *CustomerStorage) Insert(customer *Customer) (*Customer, error) {
 	query := "insert into customers (user_id, store_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	res, err := cs.sqlsess.Exec(query, customer.UserID, customer.StoreID, customer.FirstName, customer.LastName, customer.Ethnicity, customer.Gender, customer.Birthday, customer.PostalCode, customer.LastVisted, customer.DisChannel, customer.FavItem.ID)
+	res, err := cs.sqlsess.Exec(query, customer.UserID, customer.StoreID, customer.FirstName, customer.LastName, customer.Ethnicity, customer.Gender, customer.Birthday, customer.PostalCode, customer.LastVisted, customer.DisChannel, customer.FavItem)
 	if err != nil {
 		return nil, err
 	}
@@ -120,8 +105,7 @@ func (cs *CustomerStorage) Insert(customer *Customer) (*Customer, error) {
 //Update updates existing customer with given id and returns updated customer
 func (cs *CustomerStorage) Update(customerId int64, updates *NameUpdates) (*Customer, error) {
 	query := "update customers set first_name = ?, last_name = ? where id = ?"
-	// TODO: should it be Exec() here?
-	_, err := cs.sqlsess.Query(query, updates.FirstName, updates.LastName, customerId)
+	_, err := cs.sqlsess.Exec(query, updates.FirstName, updates.LastName, customerId)
 	if err != nil {
 		return nil, err
 	}
@@ -134,11 +118,22 @@ func (cs *CustomerStorage) Update(customerId int64, updates *NameUpdates) (*Cust
 
 //Delete deletes customer with given customer id
 func (cs *CustomerStorage) Delete(customerId int64) error {
-	query := "delete customers where id = customerId"
-	// TODO: should it be Exec() here?
-	_, err := cs.sqlsess.Query(query, customerId)
+	query := "delete from customers where id = ?"
+	_, err := cs.sqlsess.Exec(query, customerId)
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+//
+
+func (cs *CustomerStorage) DeleteAllbyUserId(userId int64) error {
+	delq := "delete from customers where user_id = ?"
+	_, err := cs.sqlsess.Exec(delq, userId)
+	if err != nil {
+		return fmt.Errorf("%v: %v", ErrCustomerNotDeleted, err)
+	}
+
 	return nil
 }
