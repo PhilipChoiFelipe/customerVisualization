@@ -1,9 +1,9 @@
 package main
 
-import "net/http"
+// import "net/http"
 
-func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/v1/user")
+// func main() {
+// 	mux := http.NewServeMux()
+// 	mux.HandleFunc("/v1/user")
 
-}
+// }
