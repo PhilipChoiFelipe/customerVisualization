@@ -15,7 +15,7 @@ var ErrItemNotDeleted = errors.New("failed to delete item")
 type Storage interface {
 	//GetByID returns the item with the given ID
 	GetById(itemId int64) (*Item, error)
-	
+
 	//GetItems returns all items of given store ID
 	GetItems(storeId int64) ([]*Item, error)
 
@@ -28,4 +28,10 @@ type Storage interface {
 
 	//Delete deletes item with given ID
 	Delete(id int64) error
+
+	//DeleteAllbyUserId deletes all customers reltated to user_id
+	DeleteAllbyUserId(user_id int64) error
+
+	//DeleteAllbyStoreId deletes all customers reltated to store_id
+	DeleteAllbyStoreId(user_id int64) error
 }

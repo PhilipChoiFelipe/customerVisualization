@@ -15,7 +15,7 @@ var ErrStoreNotDeleted = errors.New("failed to delete store")
 type Storage interface {
 	//GetByID returns the store with the given ID
 	GetById(storeId int64) (*Store, error)
-	
+
 	//GetStores returns all stores of given user ID
 	GetStores(userId int64) ([]*Store, error)
 
@@ -28,4 +28,7 @@ type Storage interface {
 
 	//Delete deletes store with given ID
 	Delete(id int64) error
+
+	//DeleteAllbyUserId deletes all customers reltated to user_id
+	DeleteAllbyUserId(user_id int64) error
 }

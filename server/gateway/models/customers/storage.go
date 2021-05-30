@@ -14,12 +14,12 @@ var ErrCustomerNotDeleted = errors.New("failed to delete customer")
 
 type Storage interface {
 	//GetByID returns the customer with the given ID
-	GetById(customerId int64) (*Customer, error)
+	GetById(customer_id int64) (*Customer, error)
 	//GetByItemId returns the customer
-	GetByItemId(itemId int64) ([]*Customer, error)
+	GetByItemId(item_id int64) ([]*Customer, error)
 
 	//GetCustomers returns all the customer of current user
-	GetCustomers() ([]*Customer, error)
+	GetCustomers(user_id int64) ([]*Customer, error)
 
 	//Insert inserts new customer and returns inserted customer
 	Insert(customer *Customer) (*Customer, error)
@@ -30,4 +30,7 @@ type Storage interface {
 
 	//Delete deletes customer with given ID
 	Delete(id int64) error
+
+	//DeleteAllbyUserId deletes all customers reltated to user_id
+	DeleteAllbyUserId(user_id int64) error
 }
