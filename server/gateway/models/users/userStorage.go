@@ -32,52 +32,47 @@ var (
 	PassHash  []byte
 	FirstName string
 	LastName  string
-	StoreId   int64
 )
 
 //GetById finds id of user in DB and returns the user
 func (us *UserStorage) GetById(id int64) (*User, error) {
 
-	insq := "select id, email, username, passhash, first_name, last_name, store_id from users where id = ?"
-	rows, err := us.sqlsess.Query(insq, id)
+	insq := "select id, email, username, passhash, first_name, last_name from users where id = ?"
+	err := us.sqlsess.QueryRow(insq, id).Scan(&ID, &Email, &UserName, &PassHash, &FirstName, &LastName)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-	for rows.Next() {
-		rows.Scan(&ID, &Email, &PassHash, &UserName, &FirstName, &LastName, &StoreId)
-	}
-	return &User{ID, Email, UserName, PassHash, FirstName, LastName, StoreId}, nil
+	return &User{ID, Email, UserName, PassHash, FirstName, LastName}, nil
 }
 
 //GetByEmail find email of user in DB and returns the user
 func (us *UserStorage) GetByEmail(email string) (*User, error) {
-	insq := "select id, email, username, passhash, first_name, last_name, store_id from users where email = ?"
-	err := us.sqlsess.QueryRow(insq, email).Scan(&ID, &Email, &PassHash, &UserName, &FirstName, &LastName, &StoreId)
+	insq := "select id, email, username, passhash, first_name, last_name from users where email = ?"
+	err := us.sqlsess.QueryRow(insq, email).Scan(&ID, &Email, &UserName, &PassHash, &FirstName, &LastName)
 	if err != nil {
 		return nil, err
 	}
-	return &User{ID, Email, UserName, PassHash, FirstName, LastName, StoreId}, nil
+	return &User{ID, Email, UserName, PassHash, FirstName, LastName}, nil
 }
 
 //GetByUserName finds user by username and returns user
 func (us *UserStorage) GetByUserName(username string) (*User, error) {
-	insq := "select id, email, username, passhash, first_name, last_name, store_id from users where userName = ?"
+	insq := "select id, email, username, passhash, first_name, last_name from users where userName = ?"
 	rows, err := us.sqlsess.Query(insq, username)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
-		rows.Scan(&ID, &Email, &PassHash, &UserName, &FirstName, &LastName, &StoreId)
+		rows.Scan(&ID, &Email, &UserName, &PassHash, &FirstName, &LastName)
 	}
-	return &User{ID, Email, UserName, PassHash, FirstName, LastName, StoreId}, nil
+	return &User{ID, Email, UserName, PassHash, FirstName, LastName}, nil
 }
 
 //Insert inserts user and returns inserted user
 func (us *UserStorage) Insert(user *User) (*User, error) {
-	query := "INSERT INTO users (email, username, passhash, first_name, last_name, store_id) VALUES (?,?,?,?,?,?)"
-	res, err := us.sqlsess.Exec(query, user.Email, user.PassHash, user.UserName, user.FirstName, user.LastName, user.StoreId)
+	query := "INSERT INTO users (email, username, passhash, first_name, last_name) VALUES (?,?,?,?,?)"
+	res, err := us.sqlsess.Exec(query, user.Email, user.UserName, user.PassHash, user.FirstName, user.LastName)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +100,7 @@ func (us *UserStorage) Update(id int64, updates *Updates) (*User, error) {
 
 //Delete deletes user of given user's id
 func (us *UserStorage) Delete(id int64) error {
-	insq := "delete users where ID = ?"
+	insq := "delete from users where id = ?"
 	_, err := us.sqlsess.Exec(insq, id)
 	if err != nil {
 		return err
