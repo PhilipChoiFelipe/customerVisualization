@@ -1,12 +1,6 @@
 package users
 
-import (
-	"reflect"
-	"testing"
-
-	"github.com/DATA-DOG/go-sqlmock"
-)
-
+/*
 func TestDatabase(t *testing.T) {
 	db, _, err := sqlmock.New()
 	sqlStorage := NewSqlStorage(db)
@@ -464,3 +458,5 @@ func TestDelete(t *testing.T) {
 		t.Errorf("There were unfulfilled expectations: %s", err)
 	}
 }
+
+*/
