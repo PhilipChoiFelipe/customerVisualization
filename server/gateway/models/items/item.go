@@ -6,6 +6,7 @@ import "fmt"
 type Item struct {
 	ID       int64  `json:"id"`
 	StoreID  int64  `json:"storeId"`
+	UserID   int64  `json:"userId"`
 	ItemName string `json:"itemName"`
 	Price    int64  `json:"price"`
 }

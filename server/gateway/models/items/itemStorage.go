@@ -9,18 +9,26 @@ type ItemStorage struct {
 	DB *sql.DB
 }
 
+func NewSqlStorage(sqlsess *sql.DB) *ItemStorage {
+	if sqlsess == nil {
+		panic("nil sql session")
+	}
+	return &ItemStorage{sqlsess}
+}
+
 var (
 	id        int64
 	store_id  int64
+	user_id   int64
 	item_name string
 	price     int64
 )
 
 //GetByID returns the item with the given ID
-func (is *ItemStorage) GetByID(id int64) (*Item, error) {
+func (is *ItemStorage) GetById(id int64) (*Item, error) {
 	row := is.DB.QueryRow("select * from items where id=?", id)
 	item := &Item{}
-	if err := row.Scan(&item.ID, &item.StoreID, &item.ItemName, &item.Price); err != nil {
+	if err := row.Scan(&item.ID, &item.StoreID, &item.UserID, &item.ItemName, &item.Price); err != nil {
 		return nil, fmt.Errorf("%v: %v", ErrItemNotFound, err)
 	}
 	return item, nil
@@ -38,7 +46,7 @@ func (is *ItemStorage) GetItems(storeId int64) ([]*Item, error) {
 
 	for rows.Next() {
 		item := &Item{}
-		err := rows.Scan(&item.ID, &item.StoreID, &item.ItemName, &item.Price)
+		err := rows.Scan(&item.ID, &item.StoreID, &item.UserID, &item.ItemName, &item.Price)
 		if err != nil {
 			return nil, fmt.Errorf("%v: %v", ErrItemNotFound, err)
 		}
@@ -49,9 +57,9 @@ func (is *ItemStorage) GetItems(storeId int64) ([]*Item, error) {
 
 //Insert new items and returns inserted item
 func (is *ItemStorage) Insert(item *Item) (*Item, error) {
-	insq := "insert into items(store_id, item_name, price) values (?,?,?)"
+	insql := "insert into items(store_id, user_id, item_name, price) values (?,?,?,?)"
 
-	res, err := is.DB.Exec(insq, item.StoreID, item.ItemName, item.Price)
+	res, err := is.DB.Exec(insql, item.StoreID, item.UserID, item.ItemName, item.Price)
 	if err != nil {
 		return nil, fmt.Errorf("%v: %v", ErrItemNotInserted, err)
 	}
@@ -78,7 +86,7 @@ func (is *ItemStorage) Update(id int64, updates *ItemUpdate) (*Item, error) {
 		return nil, fmt.Errorf("%v: %v", ErrItemNotUpdated, err)
 	}
 
-	return is.GetByID(id)
+	return is.GetById(id)
 }
 
 //Delete deletes item with given ID
@@ -89,5 +97,23 @@ func (is *ItemStorage) Delete(id int64) error {
 		return fmt.Errorf("%v: %v", ErrItemNotDeleted, err)
 	}
 
+	return nil
+}
+
+func (is *ItemStorage) DeleteAllbyUserId(userId int64) error {
+	delq := "delete from items where user_id = ?"
+	_, err := is.DB.Exec(delq, userId)
+	if err != nil {
+		return fmt.Errorf("%v: %v", ErrItemNotDeleted, err)
+	}
+	return nil
+}
+
+func (is *ItemStorage) DeleteAllbyStoreId(storeId int64) error {
+	delq := "delete from items where store_id = ?"
+	_, Error := is.DB.Exec(delq, storeId)
+	if Error != nil {
+		return fmt.Errorf("%v: %v", ErrItemNotDeleted, Error)
+	}
 	return nil
 }
