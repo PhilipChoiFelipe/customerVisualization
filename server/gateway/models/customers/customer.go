@@ -8,12 +8,11 @@ import (
 type Customer struct {
 	ID         int64  `json:"id"`
 	UserID     int64  `json:"userId"`
-	StoreID    int64  `json:"storeId"`
 	FirstName  string `json:"firstName"`
 	LastName   string `json:"lastName"`
 	Ethnicity  string `json:"ethnicity"`
 	Gender     string `json:"gender"`
-	Birthday   string `      json:"birthday"` // TOASK: better datatype?
+	Birthday   string `json:"birthday"` // TOASK: better datatype?
 	PostalCode int64  `json:"postalCode"`
 	LastVisted string `json:"lastVisited"`
 	DisChannel string `json:"disChannel"`

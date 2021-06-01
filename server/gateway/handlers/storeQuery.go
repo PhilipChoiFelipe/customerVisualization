@@ -1,5 +1,6 @@
 package handlers
 
+/*
 import (
 	"encoding/json"
 	"net/http"
@@ -16,7 +17,7 @@ Method:
 	POST: Save new stores
 Endpoint: version/user/{user_id}/stores
 */
-
+/*
 func (hh *HttpHandler) StoreHandler(w http.ResponseWriter, r *http.Request) {
 	sessionState := &SessionState{}
 	_, err := sessions.GetState(r, hh.SigningKey, hh.SessionStore, sessionState)
@@ -64,7 +65,7 @@ func (hh *HttpHandler) StoreHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
+*/
 /*
 handling specific store api
 Method:
@@ -73,7 +74,7 @@ Method:
 	DELETE: Delete specific store by current user
 Endpoint: version/user/{user_id}/stores/{store_id}
 */
-
+/*
 func (hh *HttpHandler) SpecificStoreHandler(w http.ResponseWriter, r *http.Request) {
 	sessionState := &SessionState{}
 	_, err := sessions.GetState(r, hh.SigningKey, hh.SessionStore, sessionState)
@@ -132,6 +133,7 @@ func (hh *HttpHandler) SpecificStoreHandler(w http.ResponseWriter, r *http.Reque
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("successfully deleted store"))
 	default:
 		http.Error(w, "ERROR: wrong request method", http.StatusMethodNotAllowed)
@@ -139,3 +141,4 @@ func (hh *HttpHandler) SpecificStoreHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 }
+*/

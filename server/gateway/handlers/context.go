@@ -7,7 +7,6 @@ import (
 	"github.com/info441-sp21/final-project/server/gateway/sessions"
 
 	"github.com/info441-sp21/final-project/server/gateway/models/items"
-	"github.com/info441-sp21/final-project/server/gateway/models/stores"
 )
 
 type HttpHandler struct {
@@ -16,5 +15,4 @@ type HttpHandler struct {
 	UserStorage     users.Storage
 	CustomerStorage customers.Storage
 	ItemStorage     items.Storage
-	StoreStorage    stores.Storage
 }

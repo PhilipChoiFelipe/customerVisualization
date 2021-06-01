@@ -134,6 +134,7 @@ func (hh *HttpHandler) SpecificCustomerHandler(w http.ResponseWriter, r *http.Re
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("successfully deleted customer"))
 	default:
 		http.Error(w, "ERROR: wrong request method", http.StatusMethodNotAllowed)

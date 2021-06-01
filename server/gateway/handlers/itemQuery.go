@@ -10,11 +10,11 @@ import (
 )
 
 /*
-handling user's certain store items api
+handling user's spec items api
 Method:
 	GET: Get all the items
 	POST: Save new item
-Endpoint: version/user/{id}/store/{store_id}/items
+Endpoint: "/v1/user/{user_id}/items"
 */
 
 func (hh *HttpHandler) ItemsHandler(w http.ResponseWriter, r *http.Request) {
@@ -25,14 +25,14 @@ func (hh *HttpHandler) ItemsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
-	storeId, err := convertsId(r, "store_id")
+	userId, err := convertsId(r, "user_id")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	switch r.Method {
 	case "GET":
-		items, err := hh.ItemStorage.GetItems(storeId)
+		items, err := hh.ItemStorage.GetItems(userId)
 		if err != nil {
 			http.Error(w, "Error: failed to find customers by current user", http.StatusBadRequest)
 			return
@@ -76,8 +76,8 @@ handling specific item api
 Method:
 	GET: get specific item
 	PATCH: update specific item
-	DELETE: Delete specific item by current user’s store
-Endpoint: version/user/{id}/stores/{store_id}/items/{item_id}
+	DELETE: Delete specific item by current user
+Endpoint: "/v1/user/{user_id}/items/{item_id}"
 */
 
 func (hh *HttpHandler) SpecificItemHandler(w http.ResponseWriter, r *http.Request) {
@@ -136,6 +136,7 @@ func (hh *HttpHandler) SpecificItemHandler(w http.ResponseWriter, r *http.Reques
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("successfully deleted item"))
 	default:
 		http.Error(w, "ERROR: wrong request method", http.StatusMethodNotAllowed)

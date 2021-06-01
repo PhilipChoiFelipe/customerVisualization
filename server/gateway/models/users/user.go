@@ -21,6 +21,7 @@ type User struct {
 	PassHash  []byte `json:"-"` //never JSON encoded/decoded
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
+	StoreName string `json:"storeName"`
 }
 
 //Credentials represents user sign-in credentials
@@ -37,6 +38,7 @@ type NewUser struct {
 	UserName     string `json:"userName"`
 	FirstName    string `json:"firstName"`
 	LastName     string `json:"lastName"`
+	StoreName    string `json:"storeName"`
 }
 
 //Updates represents allowed updates to a user profile
@@ -73,6 +75,10 @@ func (nu *NewUser) Validate() error {
 	if strings.Contains(nu.UserName, " ") {
 		return fmt.Errorf("user name cannot contain space between letters")
 	}
+
+	if len(nu.StoreName) < 1 {
+		return fmt.Errorf("store name cannot be empty")
+	}
 	return nil
 }
 
@@ -89,6 +95,7 @@ func (nu *NewUser) ToUser() (*User, error) {
 		UserName:  nu.UserName,
 		FirstName: nu.FirstName,
 		LastName:  nu.LastName,
+		StoreName: nu.StoreName,
 	}
 	user.SetPassword(nu.Password)
 	return user, nil

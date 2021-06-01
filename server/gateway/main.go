@@ -15,7 +15,6 @@ import (
 	"github.com/info441-sp21/final-project/server/gateway/handlers"
 	"github.com/info441-sp21/final-project/server/gateway/models/customers"
 	"github.com/info441-sp21/final-project/server/gateway/models/items"
-	"github.com/info441-sp21/final-project/server/gateway/models/stores"
 	"github.com/info441-sp21/final-project/server/gateway/models/users"
 	"github.com/info441-sp21/final-project/server/gateway/sessions"
 )
@@ -38,7 +37,6 @@ func main() {
 	}
 
 	userStorate := users.NewSqlStorage(db)
-	storeStorage := stores.NewSqlStorage(db)
 	itemStorage := items.NewSqlStorage(db)
 	customerStorage := customers.NewSqlStorage(db)
 
@@ -48,7 +46,7 @@ func main() {
 	})
 	sessionStore := sessions.NewRedisStore(client, time.Hour)
 
-	httpHandler := handlers.HttpHandler{SigningKey: "signingKey", SessionStore: sessionStore, UserStorage: userStorate, StoreStorage: storeStorage, ItemStorage: itemStorage, CustomerStorage: customerStorage}
+	httpHandler := handlers.HttpHandler{SigningKey: "signingKey", SessionStore: sessionStore, UserStorage: userStorate, ItemStorage: itemStorage, CustomerStorage: customerStorage}
 
 	addr := os.Getenv("ADDR")
 	if len(addr) == 0 {
@@ -79,15 +77,17 @@ func main() {
 	router.HandleFunc("/v1/user/{user_id}/customers/{customer_id}", httpHandler.SpecificCustomerHandler)
 
 	//items
-	router.HandleFunc("/v1/user/{user_id}/stores/{store_id}/items", httpHandler.ItemsHandler)
-	router.HandleFunc("/v1/user/{user_id}/stores/{store_id}/items/{item_id}", httpHandler.SpecificItemHandler)
+	router.HandleFunc("/v1/user/{user_id}/items", httpHandler.ItemsHandler)
+	router.HandleFunc("/v1/user/{user_id}/items/{item_id}", httpHandler.SpecificItemHandler)
 
-	//stores
-	router.HandleFunc("/v1/user/{user_id}/stores", httpHandler.StoreHandler)
-	router.HandleFunc("/v1/user/{user_id}/stores/{store_id}", httpHandler.SpecificStoreHandler)
+	// //stores
+	// router.HandleFunc("/v1/user/{user_id}/stores", httpHandler.StoreHandler)
+	// router.HandleFunc("/v1/user/{user_id}/stores/{store_id}", httpHandler.SpecificStoreHandler)
 
 	http.Handle("/", router)
 
+	wrappedMux := handlers.NewCORSHandler(router)
+
 	log.Printf("server is listening at port: %s", addr)
-	log.Fatal(http.ListenAndServe(addr, router))
+	log.Fatal(http.ListenAndServe(addr, wrappedMux))
 }

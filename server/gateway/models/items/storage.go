@@ -16,8 +16,8 @@ type Storage interface {
 	//GetByID returns the item with the given ID
 	GetById(itemId int64) (*Item, error)
 
-	//GetItems returns all items of given store ID
-	GetItems(storeId int64) ([]*Item, error)
+	//GetItems returns all items of given user ID
+	GetItems(userId int64) ([]*Item, error)
 
 	//Insert new items and returns inserted item
 	Insert(item *Item) (*Item, error)
@@ -31,7 +31,4 @@ type Storage interface {
 
 	//DeleteAllbyUserId deletes all customers reltated to user_id
 	DeleteAllbyUserId(user_id int64) error
-
-	//DeleteAllbyStoreId deletes all customers reltated to store_id
-	DeleteAllbyStoreId(user_id int64) error
 }

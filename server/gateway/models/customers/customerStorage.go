@@ -22,7 +22,6 @@ func NewSqlStorage(sqlsess *sql.DB) *CustomerStorage {
 var (
 	ID         int64
 	UserID     int64
-	StoreID    int64
 	FirstName  string
 	LastName   string
 	Ethnicity  string
@@ -39,26 +38,26 @@ var (
 //GetById finds id of customers in DB and returns the customer
 func (cs *CustomerStorage) GetById(customerId int64) (*Customer, error) {
 
-	query := "select id, user_id, store_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item from customers where id = ?"
-	err := cs.sqlsess.QueryRow(query, customerId).Scan(&ID, &UserID, &StoreID, &FirstName, &LastName, &Ethnicity, &Gender, &Birthday, &PostalCode, &LastVisted, &DisChannel, &ItemId)
+	query := "select id, user_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item from customers where id = ?"
+	err := cs.sqlsess.QueryRow(query, customerId).Scan(&ID, &UserID, &FirstName, &LastName, &Ethnicity, &Gender, &Birthday, &PostalCode, &LastVisted, &DisChannel, &ItemId)
 	if err != nil {
 		return nil, err
 	}
-	return &Customer{ID, UserID, StoreID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisted, DisChannel, ItemId}, nil
+	return &Customer{ID, UserID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisted, DisChannel, ItemId}, nil
 }
 
 //GetByItemId finds itemId of customers in DB and returns the customers with certain favorite ids
 func (cs *CustomerStorage) GetByItemId(itemId int64) ([]*Customer, error) {
 	var result []*Customer
-	query := "select id, user_id, store_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item from customers where fav_item = ?"
+	query := "select id, user_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item from customers where fav_item = ?"
 	rows, err := cs.sqlsess.Query(query, itemId)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
-		rows.Scan(&ID, &UserID, &StoreID, &FirstName, &LastName, &Ethnicity, &Gender, &Birthday, &PostalCode, &LastVisted, &DisChannel, &ItemId)
-		returnedCus := &Customer{ID, UserID, StoreID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisted, DisChannel, ItemId}
+		rows.Scan(&ID, &UserID, &FirstName, &LastName, &Ethnicity, &Gender, &Birthday, &PostalCode, &LastVisted, &DisChannel, &ItemId)
+		returnedCus := &Customer{ID, UserID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisted, DisChannel, ItemId}
 		result = append(result, returnedCus)
 	}
 	if len(result) == 0 {
@@ -67,18 +66,18 @@ func (cs *CustomerStorage) GetByItemId(itemId int64) ([]*Customer, error) {
 	return result, nil
 }
 
-//GetCustomers returns the all customers in DB
+//GetCustomers returns the all customers with given user Id
 func (cs *CustomerStorage) GetCustomers(user_id int64) ([]*Customer, error) {
 	var result []*Customer
-	query := "select id, user_id, store_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item from customers where user_id = ?"
+	query := "select id, user_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item from customers where user_id = ?"
 	rows, err := cs.sqlsess.Query(query, user_id)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
-		rows.Scan(&ID, &UserID, &StoreID, &FirstName, &LastName, &Ethnicity, &Gender, &Birthday, &PostalCode, &LastVisted, &DisChannel, &ItemId)
-		returnedCus := &Customer{ID, UserID, StoreID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisted, DisChannel, ItemId}
+		rows.Scan(&ID, &UserID, &FirstName, &LastName, &Ethnicity, &Gender, &Birthday, &PostalCode, &LastVisted, &DisChannel, &ItemId)
+		returnedCus := &Customer{ID, UserID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisted, DisChannel, ItemId}
 		result = append(result, returnedCus)
 	}
 	if len(result) == 0 {
@@ -89,8 +88,8 @@ func (cs *CustomerStorage) GetCustomers(user_id int64) ([]*Customer, error) {
 
 //Insert inserts new customer into database and returns inserted customer
 func (cs *CustomerStorage) Insert(customer *Customer) (*Customer, error) {
-	query := "insert into customers (user_id, store_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	res, err := cs.sqlsess.Exec(query, customer.UserID, customer.StoreID, customer.FirstName, customer.LastName, customer.Ethnicity, customer.Gender, customer.Birthday, customer.PostalCode, customer.LastVisted, customer.DisChannel, customer.FavItem)
+	query := "insert into customers (user_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	res, err := cs.sqlsess.Exec(query, customer.UserID, customer.FirstName, customer.LastName, customer.Ethnicity, customer.Gender, customer.Birthday, customer.PostalCode, customer.LastVisted, customer.DisChannel, customer.FavItem)
 	if err != nil {
 		return nil, err
 	}

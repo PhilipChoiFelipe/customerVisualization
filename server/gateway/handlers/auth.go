@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/info441-sp21/final-project/server/gateway/models/users"
 	"github.com/info441-sp21/final-project/server/gateway/sessions"
 	"golang.org/x/crypto/bcrypt"
@@ -132,11 +133,6 @@ func (hh *HttpHandler) SpecificUserHandler(w http.ResponseWriter, r *http.Reques
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		err = hh.StoreStorage.DeleteAllbyUserId(userId)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
 		err = hh.ItemStorage.DeleteAllbyUserId(userId)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -218,7 +214,9 @@ func (hh *HttpHandler) SessionsHandler(w http.ResponseWriter, r *http.Request) {
 func (hh *HttpHandler) SpecificSessionHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "DELETE":
-		selectedSession := path.Base(r.URL.Path)
+		// selectedSession := path.Base(r.URL.Path)
+		params := mux.Vars(r)
+		selectedSession := params["session_id"]
 		if selectedSession != "mine" {
 			http.Error(w, "ERROR: need appropriate sesssion call", http.StatusForbidden)
 			return
@@ -228,6 +226,7 @@ func (hh *HttpHandler) SpecificSessionHandler(w http.ResponseWriter, r *http.Req
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Signed Out"))
 	default:
 		http.Error(w, "ERROR: wrong request method", http.StatusMethodNotAllowed)
