@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCustomers } from "../actions/customer";
+//Style
 
 const Profile = () => {
   const { user: currentUser, token: authToken } = useSelector((state) => state.auth);

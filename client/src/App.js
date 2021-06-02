@@ -11,7 +11,7 @@ import Home from "./components/Home";
 import Profile from "./components/Profile";
 import ManageItems from "./components/manageItems";
 import ManageCustomers from "./components/ManageCustomers";
-import Visualization from "./components/Visualization";
+
 // import BoardUser from "./components/BoardUser";
 // import BoardModerator from "./components/BoardModerator";
 // import BoardAdmin from "./components/BoardAdmin";
@@ -73,11 +73,7 @@ const App = () => {
                   Customers
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link to={"/visualization"} className="nav-link">
-                  Visualization
-                </Link>
-              </li>
+              
               <li className="nav-item">
                 <a href="/login" className="nav-link" onClick={logOut}>
                   LogOut
@@ -109,7 +105,6 @@ const App = () => {
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/manageItems" component={ManageItems} />
             <Route exact path="/manageCustomers" component={ManageCustomers} />
-            <Route exact path="/visualization" component={Visualization} />
           </Switch>
         </div>
       </div>
