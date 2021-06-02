@@ -100,10 +100,10 @@ const ManageCustomers = () => {
         ethnicity,
         gender,
         birthday,
-        postalCode,
+        postalCode: parseInt(postalCode),
         lastVisited,
         disChannel,
-        favItem
+        favItem: parseInt(favItem)
       }
       CustomerService.createCustomer(currentUser.id, customerObj).then(
         (response) => {
@@ -260,7 +260,7 @@ const ManageCustomers = () => {
 
       <div className="container">
         <header className="jumbotron">
-          {customers.length > 0 ? (
+          {customers && customers.length > 0 ? (
             customers.map(customer => {
               return (
                 <div>

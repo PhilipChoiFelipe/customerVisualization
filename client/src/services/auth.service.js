@@ -39,12 +39,13 @@ const login = async (email, password) => {
 
 const logout = async () => {
     console.log("logout");
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
     const res = await axios.delete(API_URL + "/sessions/mine", { headers: authHeader() });
     if(res.status === 200) {
         console.log("success")
     }
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+    
 };
 
 export default {

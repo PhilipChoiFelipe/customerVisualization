@@ -33,11 +33,11 @@ type Customer struct {
 }
 */ 
 const createCustomer = async (user_id, customer) => {
+  axios.defaults.headers.common['Authorization'] = authHeader()["Authorization"];
+  console.log(customer);
   const response = await axios.post(API_URL + `/user/${user_id}/customers`, 
-  { 
-    headers: authHeader(),
-    body: JSON.stringify(customer)
-  })
+    customer
+  )
   if(response.status !== 201) {
     console.log(response.statusText);
   } else {

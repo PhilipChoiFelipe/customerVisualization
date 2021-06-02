@@ -141,7 +141,7 @@ const ManageItems = () => {
       <div className="container">
         <header className="jumbotron">
           {/* TODO: maps individual item, add storeId */}
-          {items.length > 0 ? (
+          {items && items.length > 0 ? (
             items.map(item => {
               return (
                 <div>

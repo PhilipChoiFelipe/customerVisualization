@@ -11,6 +11,7 @@ import Home from "./components/Home";
 import Profile from "./components/Profile";
 import ManageItems from "./components/manageItems";
 import ManageCustomers from "./components/ManageCustomers";
+import Visualization from "./components/Visualization";
 // import BoardUser from "./components/BoardUser";
 // import BoardModerator from "./components/BoardModerator";
 // import BoardAdmin from "./components/BoardAdmin";
@@ -50,42 +51,10 @@ const App = () => {
         <nav className="navbar navbar-expand navbar-light bg-white shadow-sm p-3 mb-5 bg-white rounded">
           
           <Link to={"/"}  class="pull-left">
-          <a class="navbar-brand" href="#">
-            <img src="img/emlogo.png" height="60" alt="logo"></img>
-          </a>
+            <a class="navbar-brand" href="#">
+              <img src="img/emlogo.png" height="60" alt="logo"></img>
+            </a>
           </Link>
-
-          {/* <div className="navbar-nav mr-auto">
-            <li className="nav-item">
-              <Link to={"/home"} className="nav-link">
-                Home
-              </Link>
-            </li>
-
-            {showModeratorBoard && (
-              <li className="nav-item">
-                <Link to={"/mod"} className="nav-link">
-                  Moderator Board
-                </Link>
-              </li>
-            )}
-
-            {showAdminBoard && (
-              <li className="nav-item">
-                <Link to={"/admin"} className="nav-link">
-                  Admin Board
-                </Link>
-              </li>
-            )}
-
-            {currentUser && (
-              <li className="nav-item">
-                <Link to={"/user"} className="nav-link">
-                  User
-                </Link>
-              </li>
-            )}
-          </div> */}
            
           {currentUser ? (
             <div className="navbar-nav ml-auto">
@@ -102,6 +71,11 @@ const App = () => {
               <li className="nav-item">
                 <Link to={"/manageCustomers"} className="nav-link">
                   Customers
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to={"/visualization"} className="nav-link">
+                  Visualization
                 </Link>
               </li>
               <li className="nav-item">
@@ -135,9 +109,7 @@ const App = () => {
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/manageItems" component={ManageItems} />
             <Route exact path="/manageCustomers" component={ManageCustomers} />
-            {/* <Route path="/user" component={BoardUser} />
-            <Route path="/mod" component={BoardModerator} />
-            <Route path="/admin" component={BoardAdmin} /> */}
+            <Route exact path="/visualization" component={Visualization} />
           </Switch>
         </div>
       </div>
