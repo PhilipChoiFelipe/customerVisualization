@@ -10,7 +10,7 @@ import Register from "./components/Register";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
 import ManageItems from "./components/manageItems";
-import ManageCustomers from "./components/manageItems";
+import ManageCustomers from "./components/ManageCustomers";
 // import BoardUser from "./components/BoardUser";
 // import BoardModerator from "./components/BoardModerator";
 // import BoardAdmin from "./components/BoardAdmin";

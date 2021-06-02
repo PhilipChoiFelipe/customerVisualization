@@ -23,7 +23,7 @@ const required = (value) => {
 const ManageCustomers = () => {
   
   const { user: currentUser } = useSelector((state) => state.auth);
-  const { customers } = useSelector((state) => state.customers);
+  const { customers } = useSelector((state) => state.customer);
 
   const form = useRef();
   const checkBtn = useRef();

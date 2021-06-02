@@ -78,6 +78,16 @@ const vfirstname = (value) => {
     }
   };
 
+  const vstoreName= (value) => {
+    if (value.length < 1 || value.length > 20) {
+      return (
+        <div className="alert alert-danger" role="alert">
+          The store name must be between 1 and 20 characters.
+        </div>
+      );
+    }
+  };
+
 const Register = () => {
   const form = useRef();
   const checkBtn = useRef();
@@ -88,6 +98,7 @@ const Register = () => {
   const [passwordConf, setPasswordConf] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [storeName, setStoreName] = useState("");
   const [successful, setSuccessful] = useState(false);
 
   const { message } = useSelector(state => state.message);
@@ -123,6 +134,12 @@ const Register = () => {
     setLastName(lastName);
   };
 
+  const onChangeStoreName = (e) => {
+    const storeName = e.target.value;
+    setStoreName(storeName);
+  };
+
+
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -130,9 +147,9 @@ const Register = () => {
     setSuccessful(false);
 
     form.current.validateAll();
-    console.log(userName, email, password, firstName, lastName)
+    console.log(userName, email, password, firstName, lastName, storeName)
     if (checkBtn.current.context._errors.length === 0) {
-      dispatch(register(userName, email, password, passwordConf, firstName, lastName))
+      dispatch(register(userName, email, password, passwordConf, firstName, lastName, storeName))
         .then(() => {
           setSuccessful(true);
         })
@@ -218,6 +235,18 @@ const Register = () => {
                   value={lastName}
                   onChange={onChangeLastName}
                   validations={[required, vlastname]}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="storeName">Store Name</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="storeName"
+                  value={storeName}
+                  onChange={onChangeStoreName}
+                  validations={[required, vstoreName]}
                 />
               </div>
 
