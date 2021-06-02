@@ -316,7 +316,7 @@ const ManageCustomers = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="favItem">Favorite Item</label>
+                  <label htmlFor="favItem">Favorite Item ID</label>
                   <Input
                     type="text"
                     className="form-control"
@@ -347,6 +347,7 @@ const ManageCustomers = () => {
       <table class="table table-hover">
         <thead>
           <tr>
+            <th scope="col">Customer ID</th>
             <th scope="col">First Name</th>
             <th scope="col">Last Name</th>
             <th scope="col">Ethnicity</th>
@@ -355,18 +356,21 @@ const ManageCustomers = () => {
             <th scope="col">Postal Code</th>
             <th scope="col">Last Visited</th>
             <th scope="col">Found Us Through</th>
-            <th scope="col">Favorite Item</th>
+            <th scope="col">Favorite Item ID</th>
           </tr>
         </thead>
         <tbody>
-          {customers && customers.length > 0 ?
+          {customers && customers.length > 0 &&
             createRows(customers)
-          :(
-            <p>No customer added yet</p>
-          )
           }
         </tbody>
       </table>
+        {!customers && (
+          <div class="alert alert-primary">
+            <h6>No customer added yet! Try inserting some customers.</h6>
+          </div>
+        )}
+      
       </div>
     </div>
   );

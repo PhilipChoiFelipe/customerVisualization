@@ -255,14 +255,14 @@ const Register = () => {
               </div>
             </div>
           )}
-
-          {message && (
+          {successful && (
             <div className="form-group">
               <div className={ successful ? "alert alert-success" : "alert alert-danger" } role="alert">
-                {message}
+                {"Registered successfully! Please log in with your credentials."}
               </div>
             </div>
           )}
+
           <CheckButton style={{ display: "none" }} ref={checkBtn} />
         </Form>
       </div>

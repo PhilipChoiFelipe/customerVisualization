@@ -215,14 +215,16 @@ const ManageItems = () => {
           </tr>
         </thead>
         <tbody>
-          {items && items.length > 0 ?
+          {items && items.length > 0 &&
             createRows(items)
-          :(
-            <p>No item added yet</p>
-          )
           }
         </tbody>
       </table>
+          {!items && (
+            <div class="alert alert-primary">
+              <h6>No item added yet! Try inserting some items.</h6>
+            </div>
+          )}
       </div>
     </div>
   );
