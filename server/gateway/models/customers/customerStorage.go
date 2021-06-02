@@ -28,7 +28,7 @@ var (
 	Gender     string
 	Birthday   string
 	PostalCode int64
-	LastVisted string
+	LastVisited string
 	DisChannel string
 	ItemId     int64
 )
@@ -39,11 +39,11 @@ var (
 func (cs *CustomerStorage) GetById(customerId int64) (*Customer, error) {
 
 	query := "select id, user_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item from customers where id = ?"
-	err := cs.sqlsess.QueryRow(query, customerId).Scan(&ID, &UserID, &FirstName, &LastName, &Ethnicity, &Gender, &Birthday, &PostalCode, &LastVisted, &DisChannel, &ItemId)
+	err := cs.sqlsess.QueryRow(query, customerId).Scan(&ID, &UserID, &FirstName, &LastName, &Ethnicity, &Gender, &Birthday, &PostalCode, &LastVisited, &DisChannel, &ItemId)
 	if err != nil {
 		return nil, err
 	}
-	return &Customer{ID, UserID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisted, DisChannel, ItemId}, nil
+	return &Customer{ID, UserID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisited, DisChannel, ItemId}, nil
 }
 
 //GetByItemId finds itemId of customers in DB and returns the customers with certain favorite ids
@@ -56,8 +56,8 @@ func (cs *CustomerStorage) GetByItemId(itemId int64) ([]*Customer, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		rows.Scan(&ID, &UserID, &FirstName, &LastName, &Ethnicity, &Gender, &Birthday, &PostalCode, &LastVisted, &DisChannel, &ItemId)
-		returnedCus := &Customer{ID, UserID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisted, DisChannel, ItemId}
+		rows.Scan(&ID, &UserID, &FirstName, &LastName, &Ethnicity, &Gender, &Birthday, &PostalCode, &LastVisited, &DisChannel, &ItemId)
+		returnedCus := &Customer{ID, UserID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisited, DisChannel, ItemId}
 		result = append(result, returnedCus)
 	}
 	if len(result) == 0 {
@@ -76,8 +76,8 @@ func (cs *CustomerStorage) GetCustomers(user_id int64) ([]*Customer, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		rows.Scan(&ID, &UserID, &FirstName, &LastName, &Ethnicity, &Gender, &Birthday, &PostalCode, &LastVisted, &DisChannel, &ItemId)
-		returnedCus := &Customer{ID, UserID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisted, DisChannel, ItemId}
+		rows.Scan(&ID, &UserID, &FirstName, &LastName, &Ethnicity, &Gender, &Birthday, &PostalCode, &LastVisited, &DisChannel, &ItemId)
+		returnedCus := &Customer{ID, UserID, FirstName, LastName, Ethnicity, Gender, Birthday, PostalCode, LastVisited, DisChannel, ItemId}
 		result = append(result, returnedCus)
 	}
 	if len(result) == 0 {
@@ -89,7 +89,7 @@ func (cs *CustomerStorage) GetCustomers(user_id int64) ([]*Customer, error) {
 //Insert inserts new customer into database and returns inserted customer
 func (cs *CustomerStorage) Insert(customer *Customer) (*Customer, error) {
 	query := "insert into customers (user_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	res, err := cs.sqlsess.Exec(query, customer.UserID, customer.FirstName, customer.LastName, customer.Ethnicity, customer.Gender, customer.Birthday, customer.PostalCode, customer.LastVisted, customer.DisChannel, customer.FavItem)
+	res, err := cs.sqlsess.Exec(query, customer.UserID, customer.FirstName, customer.LastName, customer.Ethnicity, customer.Gender, customer.Birthday, customer.PostalCode, customer.LastVisited, customer.DisChannel, customer.FavItem)
 	if err != nil {
 		return nil, err
 	}

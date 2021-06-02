@@ -14,7 +14,7 @@ type Customer struct {
 	Gender     string `json:"gender"`
 	Birthday   string `json:"birthday"` // TOASK: better datatype?
 	PostalCode int64  `json:"postalCode"`
-	LastVisted string `json:"lastVisited"`
+	LastVisited string `json:"lastVisited"`
 	DisChannel string `json:"disChannel"`
 	FavItem    int64  `json:"favItem"` // TOASK: item struct type better as json object? wbout sql?
 }
@@ -48,6 +48,6 @@ func (c *Customer) ApplyLastVistedUpdates(date string) error {
 	if len(date) == 0 {
 		return fmt.Errorf("empty updating value")
 	}
-	c.LastVisted = date
+	c.LastVisited = date
 	return nil
 }
