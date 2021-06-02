@@ -60,11 +60,10 @@ type ItemUpdate struct {
 }
 */
 const updateSpecItem = async (user_id, item_id, item_update) => {
+  axios.defaults.headers.common['Authorization'] = authHeader()["Authorization"];
   const response = await axios.patch(API_URL + `/user/${user_id}/items/${item_id}`, 
-    { 
-      body:JSON.stringify(item_update), 
-      headers: authHeader() 
-    })
+      item_update
+    )
   if(response.status !== 200) {
     console.log(response.statusText);
   } else {
@@ -81,9 +80,6 @@ const deleteSpecItem = async (user_id, item_id) => {
     return response.data;
   }
 }
-
-
-
 
 export default {
   getAllItems,

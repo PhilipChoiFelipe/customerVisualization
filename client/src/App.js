@@ -12,6 +12,7 @@ import Profile from "./components/Profile";
 import ManageItems from "./components/manageItems";
 import ManageCustomers from "./components/ManageCustomers";
 import Visualization from "./components/Visualization";
+
 // import BoardUser from "./components/BoardUser";
 // import BoardModerator from "./components/BoardModerator";
 // import BoardAdmin from "./components/BoardAdmin";
@@ -78,6 +79,7 @@ const App = () => {
                   Visualization
                 </Link>
               </li>
+              
               <li className="nav-item">
                 <a href="/login" className="nav-link" onClick={logOut}>
                   LogOut

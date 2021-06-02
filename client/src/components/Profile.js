@@ -1,20 +1,46 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCustomers } from "../actions/customer";
+import { getAllItems } from "../actions/item";
+import _ from "lodash";
 
 const Profile = () => {
   const { user: currentUser, token: authToken } = useSelector((state) => state.auth);
   const { customers } = useSelector((state) => state.customer);
+  const { items } = useSelector((state) => state.item)
+
   const dispatch = useDispatch();
-  if (!currentUser) {
+  // const maxItem = useCallback(() => {
+  //   let item_temp = _.countBy(customers, 'favItem');
+  //   console.log(customers)
+  //   console.log(item_temp)
+  //   let maxItem = {
+  //     item: null,
+  //     count: 0
+  //   };
+  //   for (let key in item_temp) {
+  //     if (item_temp[key] > maxItem['count']) {
+  //       maxItem['count'] = item_temp[key];
+  //       maxItem['item'] = key;
+  //     }
+  //   }
+  //   return maxItem;
+  // }, [customers]);
+  
+  if (!items) {
     return <Redirect to="/login" />;
   }
-  if (customers && customers.length === 0) {
-    dispatch(getAllCustomers(currentUser.id))
-  } else {
+
+  if (items && items.length === 0) {
+    dispatch(getAllItems(currentUser.id));
   }
 
+  if (customers && customers.length === 0) {
+    dispatch(getAllCustomers(currentUser.id))
+  }
+
+  
   return (
     <div className="container">
       <header className="jumbotron">

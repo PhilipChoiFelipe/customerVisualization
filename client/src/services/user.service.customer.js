@@ -66,11 +66,10 @@ type NameUpdates struct {
 }
 */
 const updateSpecCustomer = async (user_id, customer_id, nameUpdate) => {
+  axios.defaults.headers.common['Authorization'] = authHeader()["Authorization"];
   const response = await axios.patch(API_URL + `/user/${user_id}/customers/${customer_id}`, 
-    { 
-      body:JSON.stringify(nameUpdate), 
-      headers: authHeader() 
-    })
+      nameUpdate
+    )
   if(response.status !== 200) {
     console.log(response.statusText);
   } else {
