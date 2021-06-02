@@ -5,7 +5,7 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 
-import { getAllItems, getSpecItem } from "../actions/customer";
+import { getAllCustomers, getSpecCustomers } from "../actions/customer";
 
 import CustomerService from "../services/user.service.customer";
 
@@ -36,7 +36,7 @@ const ManageCustomers = () => {
   const [postalCode, setPostalCode] = useState(0);
   const [lastVisited, setLastVisited] = useState("");
   const [disChannel, setDisChannel] = useState("");
-  const [favItem, setFavItem] = useState("");
+  const [favItem, setFavItem] = useState(0);
 
   const [successful, setSuccessful] = useState(false);
 
@@ -44,9 +44,9 @@ const ManageCustomers = () => {
   const dispatch = useDispatch();
 
   if (customers && customers.length === 0) {
-    dispatch(getAllItems(currentUser.id));
+    dispatch(getAllCustomers(currentUser.id));
   }
-  console.log("manageCustomers: 49", customers)
+  // console.log("manageCustomers: 49", customers)
 
   const onChangeFirstName = (e) => {
     const firstName = e.target.value;
@@ -72,7 +72,7 @@ const ManageCustomers = () => {
     const postalCode = e.target.value;
     setPostalCode(postalCode);
   };
-  const onChangeLastVisted = (e) => {
+  const onChangeLastVisited = (e) => {
     const lastVisited = e.target.value;
     setLastVisited(lastVisited);
   };
@@ -85,7 +85,7 @@ const ManageCustomers = () => {
     setFavItem(favItem);
   };
 
-  const handleAddItem = (e) => {
+  const handleAddCustomer= (e) => {
     e.preventDefault();
 
     setSuccessful(false);
@@ -108,6 +108,7 @@ const ManageCustomers = () => {
       CustomerService.createCustomer(currentUser.id, customerObj).then(
         (response) => {
           console.log(response.data)
+          dispatch(getAllCustomers(currentUser.id))
         },
         (error) => {
           const err =
@@ -128,7 +129,7 @@ const ManageCustomers = () => {
       <div className="col-md-12">
         <div className="card card-container">
 
-          <Form onSubmit={handleAddItem} ref={form}>
+          <Form onSubmit={handleAddCustomer} ref={form}>
             {!successful && (
               <div>
                 <div className="form-group">
@@ -144,7 +145,7 @@ const ManageCustomers = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="lirstName">Last Name</label>
+                  <label htmlFor="lastName">Last Name</label>
                   <Input
                     type="text"
                     className="form-control"
@@ -156,19 +157,91 @@ const ManageCustomers = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="price">Price</label>
+                  <label htmlFor="ethnicity">Ethnicity</label>
                   <Input
                     type="text"
                     className="form-control"
-                    name="price"
-                    value={price}
-                    onChange={onChangePrice}
+                    name="ethnicity"
+                    value={ethnicity}
+                    onChange={onChangeEthnicity}
                     // validations={required}
                   />
                 </div>
 
                 <div className="form-group">
-                  <button className="btn btn-primary btn-block">Add Item</button>
+                  <label htmlFor="gender">Gender</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="gender"
+                    value={gender}
+                    onChange={onChangeGender}
+                    // validations={required}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="birthday">Birthday</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="birthday"
+                    value={birthday}
+                    onChange={onChangeBirthday}
+                    // validations={required}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="postalCode">Postal Code</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="postalCode"
+                    value={postalCode}
+                    onChange={onChangePostalCode}
+                    // validations={required}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="lastVisited">Last Visited Date</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="lastVisited"
+                    value={lastVisited}
+                    onChange={onChangeLastVisited}
+                    // validations={required}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="disChannel">Found Us Through</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="disChannel"
+                    value={disChannel}
+                    onChange={onChangeDisChannel}
+                    // validations={required}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="favItem">Favorite Item</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="favItem"
+                    value={favItem}
+                    onChange={onChangeFavItem}
+                    // validations={required}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <button className="btn btn-primary btn-block">Add Customer</button>
                 </div>
               </div>
             )}
@@ -187,21 +260,23 @@ const ManageCustomers = () => {
 
       <div className="container">
         <header className="jumbotron">
-          {/* For testing */}
-          {/* <div>{JSON.stringify(items)}</div> */}
-
-          {/* TODO: maps individual item, add storeId */}
-          {items.length > 0 ? (
-            items.map(item => {
+          {customers.length > 0 ? (
+            customers.map(customer => {
               return (
                 <div>
-                  <h3>{item.itemName}</h3>
-                  <p>{item.price}</p>
+                  <h3>Name: {customer.firstName} {customer.lastName}</h3>
+                  <p>Ethnicity: {customer.ethnicity}</p>
+                  <p>Gender: {customer.gender}</p>
+                  <p>Birthday: {customer.birthday}</p>
+                  <p>Postal Code: {customer.postalCode}</p>
+                  <p>Last Visited Date: {customer.lastVisited}</p>
+                  <p>Found Us Through: {customer.disChannel}</p>
+                  <p>Favorite Item: {customer.favItem}</p>
                 </div>
               )
             })
           ) :
-            (<h3>No item added yet</h3>)
+            (<h3>No customer added yet</h3>)
           }
         </header>
       </div>
