@@ -1,6 +1,3 @@
-//TODO
-//IMPLEMENT LATER
-
 import axios from "axios";
 import authHeader from "./auth-header";
 
@@ -17,21 +14,6 @@ const getAllCustomers = async (user_id, query={}) => {
 };
 
 //user create customer
-/*
-type Customer struct {
-	ID         int64  `json:"id"`
-	UserID     int64  `json:"userId"`
-	FirstName  string `json:"firstName"`
-	LastName   string `json:"lastName"`
-	Ethnicity  string `json:"ethnicity"`
-	Gender     string `json:"gender"`
-	Birthday   string `json:"birthday"`
-	PostalCode int64  `json:"postalCode"`
-	LastVisted string `json:"lastVisited"`
-	DisChannel string `json:"disChannel"`
-	FavItem    int64  `json:"favItem"`
-}
-*/ 
 const createCustomer = async (user_id, customer) => {
   axios.defaults.headers.common['Authorization'] = authHeader()["Authorization"];
   console.log(customer);
@@ -59,12 +41,6 @@ const getSpecCustomer = async (user_id, customer_id) => {
 
 //user patch specific customer
 // /user/{user_id}/customers/{customer_id}
-/*
-type NameUpdates struct {
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-}
-*/
 const updateSpecCustomer = async (user_id, customer_id, update) => {
   console.log(user_id, customer_id, update)
   axios.defaults.headers.common['Authorization'] = authHeader()["Authorization"];

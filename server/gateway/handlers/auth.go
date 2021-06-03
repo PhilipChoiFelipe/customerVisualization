@@ -92,9 +92,9 @@ func (hh *HttpHandler) SpecificUserHandler(w http.ResponseWriter, r *http.Reques
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}
-		// fmt.Printf("USERIDDDD::::: %v", userId)
+		// fmt.Printf("USERID: %v", userId)
 
-		// fmt.Printf("GOT USER::::: %v", user)
+		// fmt.Printf("GOT USER: %v", user)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(user)
@@ -214,7 +214,6 @@ func (hh *HttpHandler) SessionsHandler(w http.ResponseWriter, r *http.Request) {
 func (hh *HttpHandler) SpecificSessionHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "DELETE":
-		// selectedSession := path.Base(r.URL.Path)
 		params := mux.Vars(r)
 		selectedSession := params["session_id"]
 		if selectedSession != "mine" {

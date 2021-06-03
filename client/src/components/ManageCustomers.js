@@ -46,7 +46,7 @@ const ManageCustomers = () => {
   const [reverse, setReverse] = useState(false);
   const [currentSort, setCurrentSort] = useState(null);
 
-  //??
+  //checks
   const [successful, setSuccessful] = useState(false);
   const { message } = useSelector(state => state.message);
 
@@ -59,7 +59,6 @@ const ManageCustomers = () => {
   if (customers && customers.length === 0) {
     dispatch(getAllCustomers(currentUser.id));
   }
-  // console.log("manageCustomers: 49", customers)
 
   const onChangeFirstName = (e) => {
     const firstName = e.target.value;
@@ -227,14 +226,6 @@ const ManageCustomers = () => {
     setShow(true);
     setModalTitle(title);
   }
-
-   // Ethnicity  string `json:"ethnicity"`
-  // Gender     string `json:"gender"`
-  // Birthday   string `json:"birthday"` // TOASK: better datatype?
-  // PostalCode int64  `json:"postalCode"`
-  // LastVisted string `json:"lastVisited"`
-  // DisChannel string `json:"disChannel"`
-  // FavItem 
 
   return (
     <div>
@@ -432,171 +423,3 @@ const ManageCustomers = () => {
 };
 
 export default ManageCustomers;
-
-// FirstName  string `json:"firstName"`
-//     LastName   string `json:"lastName"`
-//     Ethnicity  string `json:"ethnicity"`
-//     Gender     string `json:"gender"`
-//     Birthday   string `json:"birthday"` // TOASK: better datatype?
-//     PostalCode int64  `json:"postalCode"`
-//     LastVisted string `json:"lastVisited"`
-//     DisChannel string `json:"disChannel"`
-//     FavItem    int64  `json:"favItem"`
-
-// <div>
-//       <div className="col-md-12">
-//         <div className="card card-container">
-
-//           <Form onSubmit={handleAddCustomer} ref={form}>
-//             {!successful && (
-//               <div>
-//                 <div className="form-group">
-//                   <label htmlFor="firstName">First Name</label>
-//                   <Input
-//                     type="text"
-//                     className="form-control"
-//                     name="firstName"
-//                     value={firstName}
-//                     onChange={onChangeFirstName}
-//                     // validations={required}
-//                   />
-//                 </div>
-
-//                 <div className="form-group">
-//                   <label htmlFor="lastName">Last Name</label>
-//                   <Input
-//                     type="text"
-//                     className="form-control"
-//                     name="lastName"
-//                     value={lastName}
-//                     onChange={onChangeLastName}
-//                     // validations={required}
-//                   />
-//                 </div>
-
-//                 <div className="form-group">
-//                   <label htmlFor="ethnicity">Ethnicity</label>
-//                   <Input
-//                     type="text"
-//                     className="form-control"
-//                     name="ethnicity"
-//                     value={ethnicity}
-//                     onChange={onChangeEthnicity}
-//                     // validations={required}
-//                   />
-//                 </div>
-
-//                 <div className="form-group">
-//                   <label htmlFor="gender">Gender</label>
-//                   <Input
-//                     type="text"
-//                     className="form-control"
-//                     name="gender"
-//                     value={gender}
-//                     onChange={onChangeGender}
-//                     // validations={required}
-//                   />
-//                 </div>
-
-//                 <div className="form-group">
-//                   <label htmlFor="birthday">Birthday</label>
-//                   <Input
-//                     type="text"
-//                     className="form-control"
-//                     name="birthday"
-//                     value={birthday}
-//                     onChange={onChangeBirthday}
-//                     // validations={required}
-//                   />
-//                 </div>
-
-//                 <div className="form-group">
-//                   <label htmlFor="postalCode">Postal Code</label>
-//                   <Input
-//                     type="text"
-//                     className="form-control"
-//                     name="postalCode"
-//                     value={postalCode}
-//                     onChange={onChangePostalCode}
-//                     // validations={required}
-//                   />
-//                 </div>
-
-//                 <div className="form-group">
-//                   <label htmlFor="lastVisited">Last Visited Date</label>
-//                   <Input
-//                     type="text"
-//                     className="form-control"
-//                     name="lastVisited"
-//                     value={lastVisited}
-//                     onChange={onChangeLastVisited}
-//                     // validations={required}
-//                   />
-//                 </div>
-
-//                 <div className="form-group">
-//                   <label htmlFor="disChannel">Found Us Through</label>
-//                   <Input
-//                     type="text"
-//                     className="form-control"
-//                     name="disChannel"
-//                     value={disChannel}
-//                     onChange={onChangeDisChannel}
-//                     // validations={required}
-//                   />
-//                 </div>
-
-//                 <div className="form-group">
-//                   <label htmlFor="favItem">Favorite Item</label>
-//                   <Input
-//                     type="text"
-//                     className="form-control"
-//                     name="favItem"
-//                     value={favItem}
-//                     onChange={onChangeFavItem}
-//                     // validations={required}
-//                   />
-//                 </div>
-
-//                 <div className="form-group">
-//                   <button className="btn btn-primary btn-block">Add Customer</button>
-//                 </div>
-//               </div>
-//             )}
-
-//             {message && (
-//               <div className="form-group">
-//                 <div className={successful ? "alert alert-success" : "alert alert-danger"} role="alert">
-//                   {message}
-//                 </div>
-//               </div>
-//             )}
-//             <CheckButton style={{ display: "none" }} ref={checkBtn} />
-//           </Form>
-//         </div>
-//       </div>
-
-//       <div className="container">
-//         <header className="jumbotron">
-//           {customers && customers.length > 0 ? (
-//             customers.map(customer => {
-//               return (
-//                 <div>
-//                   <h3>Name: {customer.firstName} {customer.lastName}</h3>
-//                   <p>Ethnicity: {customer.ethnicity}</p>
-//                   <p>Gender: {customer.gender}</p>
-//                   <p>Birthday: {customer.birthday}</p>
-//                   <p>Postal Code: {customer.postalCode}</p>
-//                   <p>Last Visited Date: {customer.lastVisited}</p>
-//                   <p>Found Us Through: {customer.disChannel}</p>
-//                   <p>Favorite Item: {customer.favItem}</p>
-//                 </div>
-//               )
-//             })
-//           ) :
-//             (<h3>No customer added yet</h3>)
-//           }
-//         </header>
-//       </div>
-
-//     </div>

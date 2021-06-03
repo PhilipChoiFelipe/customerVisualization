@@ -34,8 +34,6 @@ var (
 	ItemId      int64
 )
 
-//from.Format("2006-01-02") to.Format("2006-01-02")
-
 //GetById finds id of customers in DB and returns the customer
 func (cs *CustomerStorage) GetById(customerId int64) (*Customer, error) {
 

@@ -8,8 +8,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// TODO: delete all store ID from user struct due to schema update
-
 //bcryptCost is the default bcrypt cost to use when hashing passwords
 var bcryptCost = 13
 
@@ -107,7 +105,6 @@ func (nu *NewUser) ToUser() (*User, error) {
 //space is put between the names. If both are missing,
 //this returns an empty string
 func (u *User) FullName() string {
-	//TODO: implement according to comment above
 	fullName := ""
 	if len(u.FirstName) < 1 || len(u.LastName) < 1 {
 		fullName = u.FirstName + u.LastName
