@@ -7,8 +7,9 @@ import authHeader from "./auth-header";
 const API_URL = "http://localhost:80/v1";
 
 //get all items by user
-const getAllItems = async (user_id) => {
-  const response = await axios.get(API_URL + `/user/${user_id}/items`, { headers: authHeader() })
+const getAllItems = async (user_id, query) => {
+  console.log(user_id, query);
+  const response = await axios.get(API_URL + `/user/${user_id}/items`, { headers: authHeader() }, {params: query})
   if(response.status !== 200) {
     console.log(response.statusText);
   } else {

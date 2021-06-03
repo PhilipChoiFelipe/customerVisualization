@@ -9,8 +9,8 @@ import {
 
 import ItemService from "../services/user.service.item";
 
-export const getAllItems = (user_id) => (dispatch) => {
-    return ItemService.getAllItems(user_id).then(
+export const getAllItems = (user_id, query) => (dispatch) => {
+    return ItemService.getAllItems(user_id, query).then(
         (result) => {
             console.log("actions/item.js 16", result);
             dispatch({

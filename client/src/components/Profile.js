@@ -2,49 +2,53 @@ import React, { useCallback, useState } from "react";
 import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCustomers } from "../actions/customer";
+import CustomerService from "../services/user.service.customer";
 import { getAllItems } from "../actions/item";
 import _ from "lodash";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSeedling, faUserFriends, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
-// import ReactCSSTransitionGroup from 'react-transition-group'; // ES6
-// var ReactCSSTransitionGroup = require('react-transition-group'); // ES5 with npm
 
 const Profile = () => {
   const { user: currentUser, token: authToken } = useSelector((state) => state.auth);
   const { customers } = useSelector((state) => state.customer);
-  const { items } = useSelector((state) => state.item)
+  // const { items } = useSelector((state) => state.item)
 
   const dispatch = useDispatch();
-  // const maxItem = useCallback(() => {
-  //   let item_temp = _.countBy(customers, 'favItem');
-  //   console.log(customers)
-  //   console.log(item_temp)
-  //   let maxItem = {
-  //     item: null,
-  //     count: 0
-  //   };
-  //   for (let key in item_temp) {
-  //     if (item_temp[key] > maxItem['count']) {
-  //       maxItem['count'] = item_temp[key];
-  //       maxItem['item'] = key;
-  //     }
-  //   }
-  //   return maxItem;
-  // }, [customers]);
+
+  const [recentWeekCus, setRecentWeekCus] = useState(null);
+  const [recentMonthCus, setRecentMonthCus] = useState(null);
   
-  if (!items) {
+  if (!currentUser || !authToken) {
     return <Redirect to="/login" />;
   }
-  
-  // TODO: deleted bc it causes infinite loop
 
-  // if (items && items.length === 0) {
-  //   dispatch(getAllItems(currentUser.id));
-  // }
+  const handleRecentCustomers = (days, setState) => {
+    let today = new Date();
+    let lastDate = new Date(today.setDate(today.getDate() - days))
+    lastDate = lastDate.getFullYear() + "-" + (lastDate.getMonth() + 1) + "-" + lastDate.getDate();
+    console.log(lastDate)
 
-  // if (customers && customers.length === 0) {
-  //   dispatch(getAllCustomers(currentUser.id))
-  // }
+    CustomerService.getAllCustomers(currentUser.id, {sort: "last_visited", reverse: true, before: lastDate}).then(
+      (response) => {
+        setState(response);
+      },
+      (error) => {
+        const err =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+          console.log(err)
+      }
+    );
+  }
+
+  if (customers && customers.length === 0) {
+    dispatch(getAllCustomers(currentUser.id))
+    handleRecentCustomers(7, setRecentWeekCus);
+    handleRecentCustomers(31, setRecentMonthCus);
+  }
   
   return (
     <div className="container">
@@ -71,9 +75,17 @@ const Profile = () => {
             <div class="FAIcon"><FontAwesomeIcon icon={faUserFriends}  size="5x" color="#f7efc3"/></div>
             
               <h1 class="display-4"><b>
-                {customers && customers.length > 0 ? (customers.length):(0)}
+                {recentMonthCus && recentMonthCus.length > 0 ? (recentMonthCus.length):(0)}
               </b></h1>
-            <p class="lead">customers have visited</p>
+            <p class="lead">new visiters this month</p>
+          </div>
+          <div class="col-md-4">
+            <div class="FAIcon"><FontAwesomeIcon icon={faUserFriends}  size="5x" color="#f7efc3"/></div>
+            
+              <h1 class="display-4"><b>
+                {recentWeekCus && recentWeekCus.length > 0 ? (recentWeekCus.length):(0)}
+              </b></h1>
+            <p class="lead">customers have visited total</p>
           </div>
           <div class="col-md-4">
             <div class="FAIcon"><FontAwesomeIcon icon={faThumbsUp}  size="5x" color="#c3e9f7"/></div>
@@ -85,23 +97,6 @@ const Profile = () => {
         </div>
 
       </div>
-      {/* </div> */}
-
-      {/* {customers &&
-        (<ul>{customers.map(customer => {
-          return <li>{customer.firstName}</li>
-        })}</ul>)} */}
-
-      
-      {/* <p>
-        <strong>Token:</strong> {authToken.substring(0, 20)} ...{" "}
-        {authToken.substr(authToken.length - 20)}
-      </p> */}
-      {/* <strong>Authorities:</strong> */}
-      {/* <ul>
-        {currentUser.roles &&
-          currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
-      </ul> */}
     </div>
   );
 };

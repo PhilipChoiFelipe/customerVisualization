@@ -9,8 +9,8 @@ import {
 
 import CustomerService from "../services/user.service.customer";
 
-export const getAllCustomers = (user_id) => (dispatch) => {
-    return CustomerService.getAllCustomers(user_id).then(
+export const getAllCustomers = (user_id, query) => (dispatch) => {
+    return CustomerService.getAllCustomers(user_id, query).then(
         (result) => {
             console.log("actions/item.js 16", result);
             dispatch({

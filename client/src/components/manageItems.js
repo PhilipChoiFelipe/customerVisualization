@@ -8,6 +8,8 @@ import CheckButton from "react-validation/build/button";
 import { getAllItems, getSpecItem, updateSpecItem } from "../actions/item";
 import ItemService from "../services/user.service.item";
 
+
+
 //Style
 import { Modal, Button} from 'react-bootstrap';
 
@@ -29,17 +31,26 @@ const ManageItems = () => {
 
   const form = useRef();
   const checkBtn = useRef();
+
+  //Inserting
   const [itemName, setItemName] = useState("");
   const [price, setPrice] = useState(0);
   const [itemId, setItemId] = useState(0);
-  const [successful, setSuccessful] = useState(false);
+  
+
+  //Sorting by column name
+  const [reverse, setReverse] = useState(false);
+  const [currentSort, setCurrentSort] = useState(null);
 
   //Modal
   const [show, setShow] = useState(false);
   const [modalTitle, setModalTitle] = useState(null);
 
-
+  //??
+  const [successful, setSuccessful] = useState(false);
   const { message } = useSelector(state => state.message);
+
+
   const dispatch = useDispatch();
 
 
@@ -138,6 +149,22 @@ const ManageItems = () => {
     );
   }
 
+  const handleSortItems = (query) => {
+    if (currentSort === query['sort']) {
+      query['reverse'] = !reverse;
+      setReverse(!reverse);
+    } else {
+    //if clicked column first time, reverse = false
+      setCurrentSort(query['sort']);
+      setReverse(false);
+      query['reverse'] = false;
+    }
+    dispatch(getAllItems(currentUser.id, query));
+  }
+
+  //if clicked column second time, switch reverse
+
+
   const createRows = (items) => {
     return items.map( item => {
       return (
@@ -209,9 +236,9 @@ const ManageItems = () => {
       <table class="table table-hover">
         <thead>
           <tr>
-            <th scope="col">Item ID</th>
-            <th scope="col">Item Name</th>
-            <th scope="col">Price</th>
+            <th scope="col"><Button variant="light" size="sm" onClick={() => {handleSortItems({sort: "id", reverse})}}>Item ID</Button></th>
+            <th scope="col"><Button variant="light" size="sm" onClick={() => {handleSortItems({sort: "item_name", reverse})}}>Item Name</Button></th>
+            <th scope="col"><Button variant="light" size="sm" onClick={() => {handleSortItems({sort: "price", reverse})}}>Price</Button></th>
           </tr>
         </thead>
         <tbody>

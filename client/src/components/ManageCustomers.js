@@ -29,6 +29,8 @@ const ManageCustomers = () => {
   const form = useRef();
   const checkBtn = useRef();
 
+
+  //Inserting new Item
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [ethnicity, setEthnicity] = useState("");
@@ -40,13 +42,18 @@ const ManageCustomers = () => {
   const [favItem, setFavItem] = useState(0);
   const [customerId, setCustomerId] = useState(0);
 
+  //Sorting by column 
+  const [reverse, setReverse] = useState(false);
+  const [currentSort, setCurrentSort] = useState(null);
+
+  //??
   const [successful, setSuccessful] = useState(false);
+  const { message } = useSelector(state => state.message);
 
   //Modal
   const [show, setShow] = useState(false);
   const [modalTitle, setModalTitle] = useState(null);
 
-  const { message } = useSelector(state => state.message);
   const dispatch = useDispatch();
 
   if (customers && customers.length === 0) {
@@ -172,6 +179,20 @@ const ManageCustomers = () => {
           console.log(err)
       }
     );
+  }
+
+  const handleSortCustomers = (query) => {
+    //if clicked column second time, switch reverse
+    if (currentSort === query['sort']) {
+      query['reverse'] = !reverse;
+      setReverse(!reverse);
+    } else {
+    //if clicked column first time, reverse = false
+      setCurrentSort(query['sort']);
+      setReverse(false);
+      query['reverse'] = false;
+    }
+    dispatch(getAllCustomers(currentUser.id, query));
   }
 
   const createRows = (customers) => {
@@ -345,18 +366,18 @@ const ManageCustomers = () => {
       {customerId ? <><Button onClick={() => handleShow("Update Customer")}>Edit</Button>
       <Button onClick={handleDeleteCustomer}>Delete</Button> </>: <></>}
       <table class="table table-hover">
-        <thead>
+        <thead >
           <tr>
-            <th scope="col">Customer ID</th>
-            <th scope="col">First Name</th>
-            <th scope="col">Last Name</th>
-            <th scope="col">Ethnicity</th>
-            <th scope="col">Gender</th>
-            <th scope="col">Birthday</th>
-            <th scope="col">Postal Code</th>
-            <th scope="col">Last Visited</th>
-            <th scope="col">Found Us Through</th>
-            <th scope="col">Favorite Item ID</th>
+            <th scope="col"><Button variant="light" size="sm" onClick={() => {handleSortCustomers({sort: "id", reverse: reverse})}}>Customer ID</Button></th>
+            <th scope="col"><Button variant="light" size="sm" onClick={() => {handleSortCustomers({sort: "first_name", reverse: reverse})}}>First Name</Button></th>
+            <th scope="col"><Button variant="light" size="sm" onClick={() => {handleSortCustomers({sort: "last_name", reverse: reverse})}}>Last Name</Button></th>
+            <th scope="col"><Button variant="light" size="sm" onClick={() => {handleSortCustomers({sort: "ethnicity", reverse: reverse})}}>Ethnicity</Button></th>
+            <th scope="col"><Button variant="light" size="sm" onClick={() => {handleSortCustomers({sort: "gender", reverse: reverse})}}>Gender</Button></th>
+            <th scope="col"><Button variant="light" size="sm" onClick={() => {handleSortCustomers({sort: "birthday", reverse: reverse})}}>Birthday</Button></th>
+            <th scope="col"><Button variant="light" size="sm" >Postal Code</Button></th>
+            <th scope="col"><Button variant="light" size="sm" onClick={() => {handleSortCustomers({sort: "last_visited", reverse: reverse})}}>Last Visited</Button></th>
+            <th scope="col"><Button variant="light" size="sm" onClick={() => {handleSortCustomers({sort: "dis_channel", reverse: reverse})}}>Found Us Through</Button></th>
+            <th scope="col"><Button variant="light" size="sm" onClick={() => {handleSortCustomers({sort: "fav_item", reverse: reverse})}}>Favorite Item</Button></th>
           </tr>
         </thead>
         <tbody>
