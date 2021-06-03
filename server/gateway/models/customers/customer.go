@@ -6,17 +6,17 @@ import (
 )
 
 type Customer struct {
-	ID         int64  `json:"id"`
-	UserID     int64  `json:"userId"`
-	FirstName  string `json:"firstName"`
-	LastName   string `json:"lastName"`
-	Ethnicity  string `json:"ethnicity"`
-	Gender     string `json:"gender"`
-	Birthday   string `json:"birthday"` // TOASK: better datatype?
-	PostalCode int64  `json:"postalCode"`
+	ID          int64  `json:"id"`
+	UserID      int64  `json:"userId"`
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
+	Ethnicity   string `json:"ethnicity"`
+	Gender      string `json:"gender"`
+	Birthday    string `json:"birthday"` // TOASK: better datatype?
+	PostalCode  int64  `json:"postalCode"`
 	LastVisited string `json:"lastVisited"`
-	DisChannel string `json:"disChannel"`
-	FavItem    int64  `json:"favItem"` // TOASK: item struct type better as json object? wbout sql?
+	DisChannel  string `json:"disChannel"`
+	FavItem     int64  `json:"favItem"` // TOASK: item struct type better as json object? wbout sql?
 }
 
 // https://stackoverflow.com/questions/47335697/golang-decode-json-request-in-nested-struct-and-insert-in-db-as-blob
@@ -26,9 +26,20 @@ type NameUpdates struct {
 	LastName  string `json:"lastName"`
 }
 
+type Updates struct {
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
+	Ethnicity   string `json:"ethnicity"`
+	Gender      string `json:"gender"`
+	Birthday    string `json:"birthday"` // TOASK: better datatype?
+	PostalCode  int64  `json:"postalCode"`
+	LastVisited string `json:"lastVisited"`
+	DisChannel  string `json:"disChannel"`
+	FavItem     int64  `json:"favItem"`
+}
+
 func (c *Customer) ApplyNameUpdates(updates *NameUpdates) error {
 	if updates.FirstName == "" || updates.LastName == "" {
-		return fmt.Errorf("empty updating value")
 	}
 	c.FirstName = updates.FirstName
 	c.LastName = updates.LastName

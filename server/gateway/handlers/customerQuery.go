@@ -32,6 +32,8 @@ func (hh *HttpHandler) CustomersHandler(w http.ResponseWriter, r *http.Request) 
 
 		col_name := query.Get("sort")
 		reverse := query.Get("reverse")
+		// log.Println("sort:", col_name)
+		// log.Println("reverse:", reverse)
 		if reverse != "" {
 			queryCase = "sort"
 		}
@@ -43,6 +45,9 @@ func (hh *HttpHandler) CustomersHandler(w http.ResponseWriter, r *http.Request) 
 		if afterDate != "" {
 			queryCase = "sortAfter"
 		}
+		// log.Println("beforeDate:", beforeDate)
+		// log.Println("beforeDate:", afterDate)
+		// log.Println("queryCase:", queryCase)
 
 		customers, err := hh.CustomerStorage.GetCustomers(sessionState.AuthUser.ID, queryCase, col_name, reverse, beforeDate, afterDate)
 		if err != nil {
@@ -124,7 +129,7 @@ func (hh *HttpHandler) SpecificCustomerHandler(w http.ResponseWriter, r *http.Re
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(customer)
 	case "PATCH":
-		var updates customers.NameUpdates
+		var updates customers.Updates
 		if userId != sessionState.AuthUser.ID {
 			http.Error(w, "ERROR: unauthorized user", http.StatusForbidden)
 			return

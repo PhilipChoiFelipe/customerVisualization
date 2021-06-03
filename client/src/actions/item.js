@@ -49,13 +49,10 @@ export const getSpecItem = (user_id, item_id) => (dispatch) => {
         (response) =>  {
             console.log("actions/item.js 28", response)
             dispatch({
-                type: ITEM_GETSPEC_SUCCESS
+                type: ITEM_GETSPEC_SUCCESS,
+                payload: response
             });
 
-            dispatch({
-                type: SET_MESSAGE,
-                payload: response.data.message,
-            });
             return Promise.resolve();
         },
         (error) => {

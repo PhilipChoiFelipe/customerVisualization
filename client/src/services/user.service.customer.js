@@ -8,7 +8,6 @@ const API_URL = "http://localhost:80/v1";
 
 //get all customers by user
 const getAllCustomers = async (user_id, query={}) => {
-  console.log(user_id, query);
   const response = await axios.get(API_URL + `/user/${user_id}/customers`, { headers: authHeader(), params: query})
   if(response.status !== 200) {
     console.log(response.statusText);
@@ -66,10 +65,11 @@ type NameUpdates struct {
 	LastName  string `json:"lastName"`
 }
 */
-const updateSpecCustomer = async (user_id, customer_id, nameUpdate) => {
+const updateSpecCustomer = async (user_id, customer_id, update) => {
+  console.log(user_id, customer_id, update)
   axios.defaults.headers.common['Authorization'] = authHeader()["Authorization"];
   const response = await axios.patch(API_URL + `/user/${user_id}/customers/${customer_id}`, 
-      nameUpdate
+  update
     )
   if(response.status !== 200) {
     console.log(response.statusText);

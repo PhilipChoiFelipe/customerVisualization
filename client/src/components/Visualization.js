@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useSelector } from 'react-redux';
-import Customers from "../data/customers.json";
+// import Customers from "../data/customers.json";
 import {
     VictoryPie,
     VictoryBar,
@@ -13,6 +13,7 @@ import {
     VictoryContainer
 } from 'victory';
 import _ from "lodash";
+import { Button} from 'react-bootstrap';
 
 //ethnicity => number 
 //# customers by date 
@@ -22,8 +23,8 @@ import _ from "lodash";
     count: ''
 }
 */
-const ethToCus = () => {
-    let temp = _.countBy(Customers, 'ethnicity')
+const ethToCus = (customers) => {
+    let temp = _.countBy(customers, 'ethnicity')
     let dataToViz = []
     for (let key in temp) {
         dataToViz.push({
@@ -34,19 +35,21 @@ const ethToCus = () => {
     return (
         <VictoryPie
             data={dataToViz}
-            label = "ethnicity"
+            labels={({ datum }) => `${datum.ethnicity}: ${datum.count}`}
+            // label = "ethnicity"
+            width={600}
             x="ethnicity"
             y="count"
             colorScale={["tomato", "orange", "gold", "cyan", "navy" ]}
-            labelRadius={({ innerRadius }) => innerRadius + 50 }
+            // labelRadius={({ innerRadius }) => innerRadius + 50 }
             // containerComponent={<VictoryContainer responsive={false}/>}
             cornerRadius={({ datum }) => datum.count}
         />
         );
 }
 
-const disToCus = () => {
-    let temp = _.countBy(Customers, 'disChannel')
+const disToCus = (customers) => {
+    let temp = _.countBy(customers, 'disChannel')
     let dataToViz = []
     for (let key in temp) {
         dataToViz.push({
@@ -58,7 +61,7 @@ const disToCus = () => {
         <VictoryChart
         theme={VictoryTheme.material}
         containerComponent={<VictoryVoronoiContainer/>}
-        // width={600}
+        width={600}
         // height={200}
         >
         <VictoryBar
@@ -74,9 +77,9 @@ const disToCus = () => {
         );
 }
 
-const gendToCus = () => {
+const gendToCus = (customers) => {
     
-    let temp = _.countBy(Customers, 'gender')
+    let temp = _.countBy(customers, 'gender')
     let dataToViz = []
     for (let key in temp) {
         dataToViz.push({
@@ -87,6 +90,7 @@ const gendToCus = () => {
     return (
         <VictoryPie
             data={dataToViz}
+            width={600}
             labels={({ datum }) => `${datum.gender}: ${datum.count}`}
             x="gender"
             y="count"
@@ -109,9 +113,9 @@ const Visualization = () => {
         <h1>
             Visualize your customers type
         </h1>
-        <button onClick={()=>setVisType(gendToCus)}>Gender</button>
-        <button onClick={()=>setVisType(disToCus)}>Discovered Channel</button>
-        <button onClick={()=>setVisType(ethToCus)}>Ethnicity</button>
+        <Button variant="success" onClick={()=>setVisType(()=>gendToCus(customers))}>Gender</Button>
+        <Button variant="warning" onClick={()=>setVisType(()=>disToCus(customers))}>Discovered Channel</Button>
+        <Button variant="info" onClick={()=>setVisType(()=>ethToCus(customers))}>Ethnicity</Button>
             {visType}
         </div>
     );

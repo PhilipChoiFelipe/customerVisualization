@@ -3,53 +3,58 @@ import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCustomers } from "../actions/customer";
 import CustomerService from "../services/user.service.customer";
-import { getAllItems } from "../actions/item";
+import { getSpecItem } from "../actions/item";
 import _ from "lodash";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSeedling, faUserFriends, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+import { faSeedling, faChartLine, faUserFriends, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 
 const Profile = () => {
   const { user: currentUser, token: authToken } = useSelector((state) => state.auth);
   const { customers } = useSelector((state) => state.customer);
+  const { specItem } = useSelector((state) => state.item);
   // const { items } = useSelector((state) => state.item)
 
   const dispatch = useDispatch();
 
-  const [recentWeekCus, setRecentWeekCus] = useState(null);
-  const [recentMonthCus, setRecentMonthCus] = useState(null);
+  const handleRecentCustomers = useCallback((days) => {
+    let today = new Date();
+    let lastDate = new Date(today.setDate(today.getDate() - days))
+    // lastDate = lastDate.getFullYear() + "-" + (lastDate.getMonth() + 1) + "-" + lastDate.getDate();
+    let recentCustomers = customers.filter(customer => {
+      let tempDate = new Date(customer['lastVisited'])
+      // console.log("tempDate, lastDate:", tempDate, lastDate)
+      return tempDate > lastDate
+    })
+    console.log("recent customers", recentCustomers)
+    return recentCustomers;
+  }, [customers])
+
+  const handleFavoriteItem = useCallback(() => {
+    let cusToItem = _.countBy(customers, 'favItem');
+    // console.log(cusToItem)
+    let max = 0;
+    let favItem = null;
+    for (let key in cusToItem) {
+      if (cusToItem[key] > max) {
+        max = cusToItem[key]
+        favItem = key
+      }
+    }
+    dispatch(getSpecItem(currentUser.id, favItem))
+  }, [customers, currentUser, dispatch])
   
   if (!currentUser || !authToken) {
     return <Redirect to="/login" />;
   }
 
-  const handleRecentCustomers = (days, setState) => {
-    let today = new Date();
-    let lastDate = new Date(today.setDate(today.getDate() - days))
-    lastDate = lastDate.getFullYear() + "-" + (lastDate.getMonth() + 1) + "-" + lastDate.getDate();
-    console.log(lastDate)
-
-    CustomerService.getAllCustomers(currentUser.id, {sort: "last_visited", reverse: true, before: lastDate}).then(
-      (response) => {
-        setState(response);
-      },
-      (error) => {
-        const err =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-          console.log(err)
-      }
-    );
-  }
-
   if (customers && customers.length === 0) {
     dispatch(getAllCustomers(currentUser.id))
-    handleRecentCustomers(7, setRecentWeekCus);
-    handleRecentCustomers(31, setRecentMonthCus);
   }
-  
+  if (customers && customers.length > 0 && !specItem) {
+    handleFavoriteItem();
+  }
+
+
   return (
     <div className="container">
       <header className="jumbotron">
@@ -63,35 +68,38 @@ const Profile = () => {
       <div id="services" class="container-fluid text-center">
         <br></br>
         <div class="row slideanim">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <div class="FAIcon"><FontAwesomeIcon icon={faSeedling}  size="5x" color="#d9f7c3"/></div>
               <h1 class="display-4"><b>
                 {/* 128 */}
-                {customers && customers.length > 0 ? (customers.length):(0)}
+                {customers && customers.length > 0 && handleRecentCustomers(7).length > 0 ? (handleRecentCustomers(7).length):(0)}
               </b></h1>
             <h6  class="lead">new visiters this week</h6>
           </div>
-          <div class="col-md-4">
-            <div class="FAIcon"><FontAwesomeIcon icon={faUserFriends}  size="5x" color="#f7efc3"/></div>
+          <div class="col-md-3">
+            <div class="FAIcon"><FontAwesomeIcon icon={faChartLine}  size="5x" color="#faeed2"/></div>
             
               <h1 class="display-4"><b>
-                {recentMonthCus && recentMonthCus.length > 0 ? (recentMonthCus.length):(0)}
+                {customers && customers.length > 0  && handleRecentCustomers(31).length > 0 ? (handleRecentCustomers(31).length):(0)}
               </b></h1>
             <p class="lead">new visiters this month</p>
           </div>
-          <div class="col-md-4">
-            <div class="FAIcon"><FontAwesomeIcon icon={faUserFriends}  size="5x" color="#f7efc3"/></div>
+          <div class="col-md-3">
+            <div class="FAIcon"><FontAwesomeIcon icon={faUserFriends}  size="5x" color="#c3e9f7"/></div>
             
               <h1 class="display-4"><b>
-                {recentWeekCus && recentWeekCus.length > 0 ? (recentWeekCus.length):(0)}
+                {customers && customers.length > 0 ? (customers.length):(0)}
               </b></h1>
             <p class="lead">customers have visited total</p>
           </div>
-          <div class="col-md-4">
-            <div class="FAIcon"><FontAwesomeIcon icon={faThumbsUp}  size="5x" color="#c3e9f7"/></div>
+          <div class="col-md-3">
+            <div class="FAIcon"><FontAwesomeIcon icon={faThumbsUp}  size="5x" color="#ffdeea"/></div>
 
             {/* TODO: get most common fav item id in customers, SQL query?*/}
-            <h1 class="display-4"><b>Hamburger</b></h1>
+            <h1 class="display-4">
+              <b>
+                {specItem ? specItem['itemName'] : "no favorite item"}
+                </b></h1>
             <p class="lead">is currently everyone's favorite</p>
           </div>
         </div>

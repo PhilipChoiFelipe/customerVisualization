@@ -30,7 +30,7 @@ import {
       case ITEM_GETSPEC_SUCCESS:
         return {
             ...state,
-          specItem: payload.item
+          specItem: payload
         };
       case ITEM_GETSPEC_FAIL:
         return {

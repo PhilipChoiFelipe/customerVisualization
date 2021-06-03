@@ -89,7 +89,6 @@ const ManageItems = () => {
       ItemService.createItem(currentUser.id, itemObj).then(
         (response) => {
           console.log(response.data)
-
           dispatch(getAllItems(currentUser.id))
         },
         (error) => {
@@ -258,88 +257,3 @@ const ManageItems = () => {
 };
 
 export default ManageItems;
-
-                          {/* <div className="form-group">
-                            <label htmlFor="itemName">Item Name</label>
-                            <Input
-                              type="text"
-                              className="form-control"
-                              name="itemName"
-                              value={itemName}
-                              onChange={onChangeItemName}
-                              // validations={required}
-                            />
-                          </div>
-
-                          <div className="form-group">
-                            <label htmlFor="price">Price</label>
-                            <Input
-                              type="text"
-                              className="form-control"
-                              name="price"
-                              value={price}
-                              onChange={onChangePrice}
-                              // validations={required}
-                            />
-                          </div> */}
-
-
-{/* {message && (
-                        <div className="form-group">
-                          <div className={successful ? "alert alert-success" : "alert alert-danger"} role="alert">
-                            {message}
-                          </div>
-                        </div>
-                      )}
-<CheckButton style={{ display: "none" }} ref={checkBtn} /> */}
-
-
-
-
-{/* <div className="col-md-12">
-        <div className="card card-container">
-
-          <Form onSubmit={handleAddItem} ref={form}>
-            {!successful && (
-              <div>
-                <div className="form-group">
-                  <label htmlFor="itemName">Item Name</label>
-                  <Input
-                    type="text"
-                    className="form-control"
-                    name="itemName"
-                    value={itemName}
-                    onChange={onChangeItemName}
-                    // validations={required}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="price">Price</label>
-                  <Input
-                    type="text"
-                    className="form-control"
-                    name="price"
-                    value={price}
-                    onChange={onChangePrice}
-                    // validations={required}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <button className="btn btn-dark btn-block">Add Item</button>
-                </div>
-              </div>
-            )}
-
-            {message && (
-              <div className="form-group">
-                <div className={successful ? "alert alert-success" : "alert alert-danger"} role="alert">
-                  {message}
-                </div>
-              </div>
-            )}
-            <CheckButton style={{ display: "none" }} ref={checkBtn} />
-          </Form>
-        </div>
-      </div> */}

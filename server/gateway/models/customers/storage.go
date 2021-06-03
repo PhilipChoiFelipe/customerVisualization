@@ -26,7 +26,7 @@ type Storage interface {
 
 	//Update applies updates struct to the given customer ID
 	//and returns the newly-updated customer
-	Update(id int64, updates *NameUpdates) (*Customer, error)
+	Update(id int64, updates *Updates) (*Customer, error)
 
 	//Delete deletes customer with given ID
 	Delete(id int64) error

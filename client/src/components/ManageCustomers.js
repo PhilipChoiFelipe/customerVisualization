@@ -143,7 +143,14 @@ const ManageCustomers = () => {
     // form.current.validateAll();
       let cusUpdateObj = {
         firstName,
-        lastName
+        lastName,
+        ethnicity,
+        gender,
+        birthday,
+        postalCode: parseInt(postalCode),
+        lastVisited,
+        disChannel,
+        favItem: parseInt(favItem)
       }
       console.log("manageItems: 108", cusUpdateObj)
       CustomerService.updateSpecCustomer(currentUser.id, customerId ,cusUpdateObj).then(
@@ -266,26 +273,41 @@ const ManageCustomers = () => {
 
                 <div className="form-group">
                   <label htmlFor="ethnicity">Ethnicity</label>
-                  <Input
+                  <select class="form-select" aria-label="Default select example" onChange={onChangeEthnicity}>
+                    <option selected>Ethnicity</option>
+                    <option value="Black">Black</option>
+                    <option value="White">White</option>
+                    <option value="Native American">Native American</option>
+                    <option value="Asian">Asian</option>
+                    <option value="Latin">Latin</option>
+                    <option value="Pacific Islander">Pacific Islander</option>
+                  </select>
+                  {/* <Input
                     type="text"
                     className="form-control"
                     name="ethnicity"
                     value={ethnicity}
                     onChange={onChangeEthnicity}
                     // validations={required}
-                  />
+                  /> */}
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="gender">Gender</label>
-                  <Input
+                  <select class="form-select" aria-label="Default select example" onChange={onChangeGender}>
+                    <option selected>Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Others">Don't want to answer</option>
+                  </select>
+                  {/* <Input
                     type="text"
                     className="form-control"
                     name="gender"
                     value={gender}
                     onChange={onChangeGender}
                     // validations={required}
-                  />
+                  /> */}
                 </div>
 
                 <div className="form-group">
@@ -296,6 +318,7 @@ const ManageCustomers = () => {
                     name="birthday"
                     value={birthday}
                     onChange={onChangeBirthday}
+                    placeholder={"YYYY-MM-DD"}
                     // validations={required}
                   />
                 </div>
@@ -320,20 +343,31 @@ const ManageCustomers = () => {
                     name="lastVisited"
                     value={lastVisited}
                     onChange={onChangeLastVisited}
+                    placeholder={"YYYY-MM-DD"}
                     // validations={required}
                   />
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="disChannel">Found Us Through</label>
-                  <Input
+                  <select class="form-select" aria-label="Default select example" onChange={onChangeDisChannel}>
+                    <option selected>Channel</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="Google">Google</option>
+                    <option value="News">News</option>
+                    <option value="Poster">Poster</option>
+                    <option value="Youtube">Youtube</option>
+                    <option value="Friends">Friends</option>
+                  </select>
+                  {/* <Input
                     type="text"
                     className="form-control"
                     name="disChannel"
                     value={disChannel}
                     onChange={onChangeDisChannel}
                     // validations={required}
-                  />
+                  /> */}
                 </div>
 
                 <div className="form-group">
