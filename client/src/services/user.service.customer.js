@@ -4,7 +4,7 @@
 import axios from "axios";
 import authHeader from "./auth-header";
 
-const API_URL = "http://localhost:80/v1";
+const API_URL = "https://441final-api.erinchang.me/v1";
 
 //get all customers by user
 const getAllCustomers = async (user_id, query={}) => {

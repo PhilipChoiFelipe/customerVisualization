@@ -81,7 +81,7 @@ const App = () => {
               </li>
               
               <li className="nav-item">
-                <a href="/login" className="nav-link" onClick={logOut}>
+                <a href="/" className="nav-link" onClick={logOut}>
                   Log Out
                 </a>
               </li>
@@ -107,12 +107,12 @@ const App = () => {
         <div className="container mt-3">
           <Switch>
             <Route exact path={["/", "/home"]} component={Profile} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
-            <Route exact path="/profile" component={Profile} />
-            <Route exact path="/manageItems" component={ManageItems} />
-            <Route exact path="/manageCustomers" component={ManageCustomers} />
-            <Route exact path="/visualization" component={Visualization} />
+            <Route path="/login" component={Login} />
+            <Route path="/register" component={Register} />
+            <Route path="/profile" component={Profile} />
+            <Route path="/manageItems" component={ManageItems} />
+            <Route path="/manageCustomers" component={ManageCustomers} />
+            <Route path="/visualization" component={Visualization} />
           </Switch>
         </div>
       </div>

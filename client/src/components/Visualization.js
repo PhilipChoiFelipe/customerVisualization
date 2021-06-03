@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useSelector } from 'react-redux';
-// import Customers from "../data/customers.json";
+// import customers from "../data/customers.json";
 import {
     VictoryPie,
     VictoryBar,

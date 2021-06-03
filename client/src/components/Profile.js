@@ -8,6 +8,10 @@ import _ from "lodash";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSeedling, faChartLine, faUserFriends, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 
+//mockdata
+// import customers from "../data/MOCK_DATA.json";
+
+
 const Profile = () => {
   const { user: currentUser, token: authToken } = useSelector((state) => state.auth);
   const { customers } = useSelector((state) => state.customer);
@@ -40,6 +44,7 @@ const Profile = () => {
         favItem = key
       }
     }
+    console.log(favItem);
     dispatch(getSpecItem(currentUser.id, favItem))
   }, [customers, currentUser, dispatch])
   
@@ -50,7 +55,9 @@ const Profile = () => {
   if (customers && customers.length === 0) {
     dispatch(getAllCustomers(currentUser.id))
   }
-  if (customers && customers.length > 0 && !specItem) {
+
+  if ((customers && customers.length > 0 )&& !specItem) {
+    console.log("ITEM SPEC FUNCTION")
     handleFavoriteItem();
   }
 
