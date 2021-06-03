@@ -26,9 +26,27 @@ func (hh *HttpHandler) CustomersHandler(w http.ResponseWriter, r *http.Request) 
 	}
 	switch r.Method {
 	case "GET":
-		customers, err := hh.CustomerStorage.GetCustomers(sessionState.AuthUser.ID)
+		queryCase := "default"
+		// params := mux.Vars(r)
+		query := r.URL.Query()
+
+		col_name := query.Get("sort")
+		reverse := query.Get("reverse")
+		if reverse != "" {
+			queryCase = "sort"
+		}
+		beforeDate := query.Get("before")
+		if beforeDate != "" {
+			queryCase = "sortBefore"
+		}
+		afterDate := query.Get("after")
+		if afterDate != "" {
+			queryCase = "sortAfter"
+		}
+
+		customers, err := hh.CustomerStorage.GetCustomers(sessionState.AuthUser.ID, queryCase, col_name, reverse, beforeDate, afterDate)
 		if err != nil {
-			http.Error(w, "Error: failed to find customers by current user", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")

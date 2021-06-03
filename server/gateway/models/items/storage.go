@@ -17,7 +17,7 @@ type Storage interface {
 	GetById(itemId int64) (*Item, error)
 
 	//GetItems returns all items of given user ID
-	GetItems(userId int64) ([]*Item, error)
+	GetItems(userId int64, queryCase string, col_name string, reverse string) ([]*Item, error)
 
 	//Insert new items and returns inserted item
 	Insert(item *Item) (*Item, error)

@@ -19,7 +19,7 @@ type Storage interface {
 	GetByItemId(item_id int64) ([]*Customer, error)
 
 	//GetCustomers returns all the customer of current user
-	GetCustomers(user_id int64) ([]*Customer, error)
+	GetCustomers(user_id int64, queryCase string, col_name string, reverse string, beforeDate string, afterDate string) ([]*Customer, error)
 
 	//Insert inserts new customer and returns inserted customer
 	Insert(customer *Customer) (*Customer, error)
