@@ -20,17 +20,17 @@ func NewSqlStorage(sqlsess *sql.DB) *CustomerStorage {
 }
 
 var (
-	ID         int64
-	UserID     int64
-	FirstName  string
-	LastName   string
-	Ethnicity  string
-	Gender     string
-	Birthday   string
-	PostalCode int64
+	ID          int64
+	UserID      int64
+	FirstName   string
+	LastName    string
+	Ethnicity   string
+	Gender      string
+	Birthday    string
+	PostalCode  int64
 	LastVisited string
-	DisChannel string
-	ItemId     int64
+	DisChannel  string
+	ItemId      int64
 )
 
 //from.Format("2006-01-02") to.Format("2006-01-02")
@@ -67,10 +67,43 @@ func (cs *CustomerStorage) GetByItemId(itemId int64) ([]*Customer, error) {
 }
 
 //GetCustomers returns the all customers with given user Id
-func (cs *CustomerStorage) GetCustomers(user_id int64) ([]*Customer, error) {
+func (cs *CustomerStorage) GetCustomers(user_id int64, queryCase string, col_name string, reverse string, beforeDate string, afterDate string) ([]*Customer, error) {
 	var result []*Customer
+
 	query := "select id, user_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item from customers where user_id = ?"
-	rows, err := cs.sqlsess.Query(query, user_id)
+	var values []interface{}
+
+	switch queryCase {
+	case "default":
+		values = append(values, user_id)
+	case "sort":
+		if reverse == "true" {
+			query = "select * from customers where user_id = ? order by ? DESC"
+		} else {
+			query = "select * from customers where user_id = ? order by ? ASC"
+		}
+		values = append(values, user_id, col_name)
+	case "sortBefore":
+		if reverse == "true" {
+			query = "select * from customers where user_id = ? and ? <= ? order by ? DESC"
+			values = append(values, user_id, col_name, beforeDate, col_name)
+		} else {
+			query = "select * from customers where user_id = ? and ? <= ? order by ? ASC"
+			values = append(values, user_id, col_name, beforeDate, col_name)
+		}
+
+	case "sortAfter":
+		if reverse == "true" {
+			query = "select * from customers where user_id = ? and ? >= ? order by ? DESC"
+			values = append(values, user_id, col_name, beforeDate, col_name)
+		} else {
+			query = "select * from customers where user_id = ? and ? >= ? order by ? ASC"
+			values = append(values, user_id, col_name, beforeDate, col_name)
+		}
+	}
+
+	rows, err := cs.sqlsess.Query(query, values)
+	// rows, err := cs.sqlsess.Query(query, user_id)
 	if err != nil {
 		return nil, err
 	}

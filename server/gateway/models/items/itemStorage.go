@@ -34,15 +34,33 @@ func (is *ItemStorage) GetById(id int64) (*Item, error) {
 }
 
 // Returns all items with given user ID
-func (is *ItemStorage) GetItems(userId int64) ([]*Item, error) {
-	rows, err := is.DB.Query("select * from items where user_id = ?", userId)
-	if err != nil {
-		return nil, fmt.Errorf("%v: %v", ErrItemNotFound, err)
+func (is *ItemStorage) GetItems(userId int64, queryCase string, col_name string, reverse string) ([]*Item, error) {
+
+	query := "select * from items where user_id = ?"
+	// rows, err := is.DB.Query("select * from items where user_id = ?", userId)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("%v: %v", ErrItemNotFound, err)
+	// }
+
+	var values []interface{}
+	var items []*Item
+	switch queryCase {
+	case "default":
+		values = append(values, user_id)
+	case "sort":
+		if reverse == "true" {
+			query = "select * from items where user_id = ? order by ? DESC"
+		} else {
+			query = "select * from items where user_id = ? order by ? ASC"
+		}
+		values = append(values, user_id, col_name)
 	}
 
+	rows, err := is.DB.Query(query, values)
+	if err != nil {
+		return nil, err
+	}
 	defer rows.Close()
-	var items []*Item
-
 	for rows.Next() {
 		item := &Item{}
 		err := rows.Scan(&item.ID, &item.UserID, &item.ItemName, &item.Price)

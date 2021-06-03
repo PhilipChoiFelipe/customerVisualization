@@ -32,7 +32,17 @@ func (hh *HttpHandler) ItemsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	switch r.Method {
 	case "GET":
-		items, err := hh.ItemStorage.GetItems(userId)
+
+		queryCase := "default"
+		query := r.URL.Query()
+
+		col_name := query.Get("sort")
+		reverse := query.Get("reverse")
+		if reverse != "" {
+			queryCase = "sort"
+		}
+
+		items, err := hh.ItemStorage.GetItems(userId, queryCase, col_name, reverse)
 		if err != nil {
 			http.Error(w, "Error: failed to find customers by current user", http.StatusBadRequest)
 			return
