@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"os"
 	"time"
 
@@ -13,8 +14,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/info441-sp21/final-project/server/gateway/handlers"
-	"github.com/info441-sp21/final-project/server/gateway/models/customers"
-	"github.com/info441-sp21/final-project/server/gateway/models/items"
 	"github.com/info441-sp21/final-project/server/gateway/models/users"
 	"github.com/info441-sp21/final-project/server/gateway/sessions"
 )
@@ -39,9 +38,7 @@ func main() {
 		fmt.Printf("sql successfully connected!\n")
 	}
 
-	userStorate := users.NewSqlStorage(db)
-	itemStorage := items.NewSqlStorage(db)
-	customerStorage := customers.NewSqlStorage(db)
+	userStorage := users.NewSqlStorage(db)
 
 	client := redis.NewClient(&redis.Options{
 		Addr: redisAdd,
@@ -49,7 +46,7 @@ func main() {
 	})
 	sessionStore := sessions.NewRedisStore(client, time.Hour)
 
-	httpHandler := handlers.HttpHandler{SigningKey: signingKey, SessionStore: sessionStore, UserStorage: userStorate, ItemStorage: itemStorage, CustomerStorage: customerStorage}
+	httpHandler := handlers.HttpHandler{SigningKey: signingKey, SessionStore: sessionStore, UserStorage: userStorage}
 
 	addr := os.Getenv("ADDR")
 	if len(addr) == 0 {
@@ -65,6 +62,10 @@ func main() {
 		return
 	}
 
+	userDSAddrs := os.Getenv("USERDSADDR")
+	userDSURLs := GetURLs(userDSAddrs)
+	userDSProxy := &httputil.ReverseProxy{Director: CustomDirector(userDSURLs, &httpHandler)}
+
 	router := mux.NewRouter()
 	//user handlers
 	router.HandleFunc("/v1/user", httpHandler.UsersHandler)
@@ -72,18 +73,18 @@ func main() {
 	router.HandleFunc("/v1/sessions", httpHandler.SessionsHandler)
 	router.HandleFunc("/v1/sessions/{session_id}", httpHandler.SpecificSessionHandler)
 
+	//MICROSERVICE
 	//customer handlers
-	router.HandleFunc("/v1/user/{user_id}/customers", httpHandler.CustomersHandler)
-	router.HandleFunc("/v1/user/{user_id}/customers/{customer_id}", httpHandler.SpecificCustomerHandler)
+	router.Handle("/v1/user/{user_id}/customers", userDSProxy)
+	router.Handle("/v1/user/{user_id}/customers/{customer_id}", userDSProxy)
 
 	//item handlers
-	router.HandleFunc("/v1/user/{user_id}/items", httpHandler.ItemsHandler)
-	router.HandleFunc("/v1/user/{user_id}/items/{item_id}", httpHandler.SpecificItemHandler)
-
-	http.Handle("/", router)
+	router.Handle("/v1/user/{user_id}/items", userDSProxy)
+	router.Handle("/v1/user/{user_id}/items/{item_id}", userDSProxy)
 
 	wrappedMux := handlers.NewCORSHandler(router)
 
 	log.Printf("server is listening at port: %s", addr)
 	log.Fatal(http.ListenAndServeTLS(addr, tlsCertPath, tlsKeyPath, wrappedMux))
+	// log.Fatal(http.ListenAndServe(addr, wrappedMux))
 }

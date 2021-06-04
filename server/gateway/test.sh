@@ -12,11 +12,12 @@ docker run -d -p 6379:6379 --name 441finalRedis --network 441finalNet redis
 docker rm -f 441finalGateway
 docker run \
     -d \
-    -e ADDR=:80 \
+    -e ADDR=:4000 \
+    -e USERDSADDR=userDSInstance \
     -e SESSIONKEY=erinandmin441erinandmin441 \
     -e REDISADDR=host.docker.internal:6379 \
     -e DSN=root:erinandmin441\@tcp\(host.docker.internal:3306\)/441finalDB \
-    -p 80:80 \
+    -p 4000:4000 \
     --name 441finalGateway \
     --network 441finalNet \
     chlalstjr7/final_gateway

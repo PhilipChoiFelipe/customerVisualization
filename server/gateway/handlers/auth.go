@@ -125,16 +125,6 @@ func (hh *HttpHandler) SpecificUserHandler(w http.ResponseWriter, r *http.Reques
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(user)
 	case "DELETE":
-		err := hh.CustomerStorage.DeleteAllbyUserId(userId)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		err = hh.ItemStorage.DeleteAllbyUserId(userId)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
 		err = hh.UserStorage.Delete(userId)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)

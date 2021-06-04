@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
-	"github.com/info441-sp21/final-project/server/gateway/models/customers"
-	"github.com/info441-sp21/final-project/server/gateway/sessions"
+	"github.com/info441-sp21/final-project/server/gateway/models/users"
+	"github.com/info441-sp21/final-project/server/userDataService/models/customers"
 )
 
 /*
@@ -18,12 +18,28 @@ Endpoint: version/user/{id}/customers
 */
 
 func (hh *HttpHandler) CustomersHandler(w http.ResponseWriter, r *http.Request) {
-	sessionState := &SessionState{}
-	_, err := sessions.GetState(r, hh.SigningKey, hh.SessionStore, sessionState)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
+	//User
+	//type User struct {
+	// 	ID        int64  `json:"id"`
+	// 	Email     string `json:"-"` //never JSON encoded/decoded
+	// 	UserName  string `json:"userName"`
+	// 	PassHash  []byte `json:"-"` //never JSON encoded/decoded
+	// 	FirstName string `json:"firstName"`
+	// 	LastName  string `json:"lastName"`
+	// 	StoreName string `json:"storeName"`
+	// }
+	var authUser users.User
+	authHeader := r.Header.Get("X-User")
+	if len(authHeader) == 0 {
+		http.Error(w, "current user it not authorized", http.StatusUnauthorized)
 		return
 	}
+	err := json.Unmarshal([]byte(authHeader), &authUser)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	switch r.Method {
 	case "GET":
 		queryCase := "default"
@@ -44,7 +60,7 @@ func (hh *HttpHandler) CustomersHandler(w http.ResponseWriter, r *http.Request) 
 			queryCase = "sortAfter"
 		}
 
-		customers, err := hh.CustomerStorage.GetCustomers(sessionState.AuthUser.ID, queryCase, col_name, reverse, beforeDate, afterDate)
+		customers, err := hh.CustomerStorage.GetCustomers(authUser.ID, queryCase, col_name, reverse, beforeDate, afterDate)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
@@ -93,6 +109,17 @@ Endpoint: version/user/{user_id}/customers/{customer_id}
 */
 
 func (hh *HttpHandler) SpecificCustomerHandler(w http.ResponseWriter, r *http.Request) {
+	var authUser users.User
+	authHeader := r.Header.Get("X-User")
+	if len(authHeader) == 0 {
+		http.Error(w, "current user it not authorized", http.StatusUnauthorized)
+		return
+	}
+	err := json.Unmarshal([]byte(authHeader), &authUser)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	customerId, err := convertsId(r, "customer_id")
 	if err != nil {
@@ -103,13 +130,6 @@ func (hh *HttpHandler) SpecificCustomerHandler(w http.ResponseWriter, r *http.Re
 	userId, err := convertsId(r, "user_id")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	sessionState := &SessionState{}
-	_, err = sessions.GetState(r, hh.SigningKey, hh.SessionStore, sessionState)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
 
@@ -125,7 +145,7 @@ func (hh *HttpHandler) SpecificCustomerHandler(w http.ResponseWriter, r *http.Re
 		json.NewEncoder(w).Encode(customer)
 	case "PATCH":
 		var updates customers.Updates
-		if userId != sessionState.AuthUser.ID {
+		if userId != authUser.ID {
 			http.Error(w, "ERROR: unauthorized user", http.StatusForbidden)
 			return
 		}

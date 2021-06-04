@@ -15,6 +15,7 @@ docker run \
     -d \
     -e ADDR=:443 \
     -e SESSIONKEY=minseokchoiminseokchoi1234 \
+    -e USERDSADDR=userDSInstance \
     -e REDISADDR=441final-api.erinchang.me:6379 \
     -e DSN=root:erinandmin441\@tcp\(441final-api.erinchang.me:3306\)/441finalDB \
     -e TLSKEY=$TLSKEY -e TLSCERT=$TLSCERT \

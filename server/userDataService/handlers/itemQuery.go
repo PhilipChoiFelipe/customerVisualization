@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/info441-sp21/final-project/server/gateway/models/items"
-	"github.com/info441-sp21/final-project/server/gateway/sessions"
+	"github.com/info441-sp21/final-project/server/gateway/models/users"
+	"github.com/info441-sp21/final-project/server/userDataService/models/items"
 )
 
 /*
@@ -18,11 +18,16 @@ Endpoint: "/v1/user/{user_id}/items"
 */
 
 func (hh *HttpHandler) ItemsHandler(w http.ResponseWriter, r *http.Request) {
-	sessionState := &SessionState{}
-	_, err := sessions.GetState(r, hh.SigningKey, hh.SessionStore, sessionState)
-	// errorHandler()
+
+	var authUser users.User
+	authHeader := r.Header.Get("X-User")
+	if len(authHeader) == 0 {
+		http.Error(w, "current user it not authorized", http.StatusUnauthorized)
+		return
+	}
+	err := json.Unmarshal([]byte(authHeader), &authUser)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	userId, err := convertsId(r, "user_id")
@@ -32,7 +37,6 @@ func (hh *HttpHandler) ItemsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	switch r.Method {
 	case "GET":
-
 		queryCase := "default"
 		query := r.URL.Query()
 
@@ -91,12 +95,18 @@ Endpoint: "/v1/user/{user_id}/items/{item_id}"
 */
 
 func (hh *HttpHandler) SpecificItemHandler(w http.ResponseWriter, r *http.Request) {
-	sessionState := &SessionState{}
-	_, err := sessions.GetState(r, hh.SigningKey, hh.SessionStore, sessionState)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnauthorized)
+	var authUser users.User
+	authHeader := r.Header.Get("X-User")
+	if len(authHeader) == 0 {
+		http.Error(w, "current user it not authorized", http.StatusUnauthorized)
 		return
 	}
+	err := json.Unmarshal([]byte(authHeader), &authUser)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	userId, err := convertsId(r, "user_id")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -119,7 +129,7 @@ func (hh *HttpHandler) SpecificItemHandler(w http.ResponseWriter, r *http.Reques
 		json.NewEncoder(w).Encode(item)
 	case "PATCH":
 		var updates items.ItemUpdate
-		if userId != sessionState.AuthUser.ID {
+		if userId != authUser.ID {
 			http.Error(w, "ERROR: unauthorized user", http.StatusForbidden)
 			return
 		}
