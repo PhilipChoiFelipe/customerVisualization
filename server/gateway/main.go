@@ -25,6 +25,9 @@ func main() {
 	//sql address
 	dsn := os.Getenv("DSN")
 
+	//session id key
+	signingKey := os.Getenv("SESSIONKEY")
+
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		fmt.Printf("error opening database: %v\n", err)
@@ -46,24 +49,21 @@ func main() {
 	})
 	sessionStore := sessions.NewRedisStore(client, time.Hour)
 
-	httpHandler := handlers.HttpHandler{SigningKey: "signingKey", SessionStore: sessionStore, UserStorage: userStorate, ItemStorage: itemStorage, CustomerStorage: customerStorage}
+	httpHandler := handlers.HttpHandler{SigningKey: signingKey, SessionStore: sessionStore, UserStorage: userStorate, ItemStorage: itemStorage, CustomerStorage: customerStorage}
 
 	addr := os.Getenv("ADDR")
 	if len(addr) == 0 {
 		addr = ":443"
 	}
 
-	// tlsKeyPath := os.Getenv("TLSKEY")
-	// tlsCertPath := os.Getenv("TLSCERT")
+	tlsKeyPath := os.Getenv("TLSKEY")
+	tlsCertPath := os.Getenv("TLSCERT")
 
-	// if len(tlsKeyPath) == 0 || len(tlsCertPath) == 0 {
-	// 	log.Print("appropriate tls path is not provided")
-	// 	os.Exit(1)
-	// 	return
-	// }
-
-	dummy := "test"
-	fmt.Println(dummy)
+	if len(tlsKeyPath) == 0 || len(tlsCertPath) == 0 {
+		log.Print("appropriate tls path is not provided")
+		os.Exit(1)
+		return
+	}
 
 	router := mux.NewRouter()
 	//user
@@ -96,5 +96,6 @@ func main() {
 	wrappedMux := handlers.NewCORSHandler(router)
 
 	log.Printf("server is listening at port: %s", addr)
-	log.Fatal(http.ListenAndServe(addr, wrappedMux))
+	log.Fatal(http.ListenAndServeTLS(addr, tlsCertPath, tlsKeyPath, wrappedMux))
+	// log.Fatal(http.ListenAndServe(addr, wrappedMux))
 }
