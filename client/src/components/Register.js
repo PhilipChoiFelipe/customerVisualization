@@ -18,6 +18,7 @@ const required = (value) => {
   }
 };
 
+// Validate inputs
 const validEmail = (value) => {
   if (!isEmail(value)) {
     return (

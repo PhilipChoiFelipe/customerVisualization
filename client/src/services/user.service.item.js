@@ -1,6 +1,3 @@
-//TODO
-//IMPLEMENT LATER
-
 import axios from "axios";
 import authHeader from "./auth-header";
 
@@ -18,14 +15,6 @@ const getAllItems = async (user_id, query) => {
 };
 
 //user create item
-/*
-type Item struct {
-	ID       int64  `json:"id"`
-	UserID   int64  `json:"userId"`
-	ItemName string `json:"itemName"`
-	Price    int64  `json:"price"`
-}
-*/ 
 const createItem = async (user_id, item) => {
   axios.defaults.headers.common['Authorization'] = authHeader()["Authorization"];
   console.log("user.service.item 30", item);
@@ -54,12 +43,6 @@ const getSpecItem = async (user_id, item_id) => {
 }
 
 //user patch specific item
-/*
-type ItemUpdate struct {
-	ItemName string `json:"itemName"`
-	Price    int64  `json:"price"`
-}
-*/
 const updateSpecItem = async (user_id, item_id, item_update) => {
   axios.defaults.headers.common['Authorization'] = authHeader()["Authorization"];
   const response = await axios.patch(API_URL + `/user/${user_id}/items/${item_id}`, 

@@ -66,30 +66,20 @@ func main() {
 	}
 
 	router := mux.NewRouter()
-	//user
+	//user handlers
 	router.HandleFunc("/v1/user", httpHandler.UsersHandler)
 	router.HandleFunc("/v1/user/{user_id}", httpHandler.SpecificUserHandler)
 	router.HandleFunc("/v1/sessions", httpHandler.SessionsHandler)
 	router.HandleFunc("/v1/sessions/{session_id}", httpHandler.SpecificSessionHandler)
 
-	//customer
+	//customer handlers
 	router.HandleFunc("/v1/user/{user_id}/customers", httpHandler.CustomersHandler)
-	// router.HandleFunc("/v1/user/{user_id}/customers/?mostFeature={col_name}", httpHandler.CustomersHandler)
-	// router.HandleFunc("/v1/user/{user_id}/customers/?sort={col_name}&reverse={bool}", httpHandler.CustomersHandler)
-	// router.HandleFunc("/v1/user/{user_id}/customers/?sort={col_name}&reverse={bool}&before={beforeDate}", httpHandler.CustomersHandler)
-	// router.HandleFunc("/v1/user/{user_id}/customers/?sort={col_name}&reverse={bool}&after={afterDate}", httpHandler.CustomersHandler)
-
 	router.HandleFunc("/v1/user/{user_id}/customers/{customer_id}", httpHandler.SpecificCustomerHandler)
 
-	//items
-	// router.HandleFunc("/v1/user/{user_id}/items/?sort={col_name}&reverse={bool}", httpHandler.ItemsHandler)
+	//item handlers
 	router.HandleFunc("/v1/user/{user_id}/items", httpHandler.ItemsHandler)
-
 	router.HandleFunc("/v1/user/{user_id}/items/{item_id}", httpHandler.SpecificItemHandler)
 
-	// //stores
-	// router.HandleFunc("/v1/user/{user_id}/stores", httpHandler.StoreHandler)
-	// router.HandleFunc("/v1/user/{user_id}/stores/{store_id}", httpHandler.SpecificStoreHandler)
 
 	http.Handle("/", router)
 

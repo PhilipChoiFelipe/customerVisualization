@@ -8,8 +8,6 @@ import CheckButton from "react-validation/build/button";
 import { getAllItems, getSpecItem, updateSpecItem } from "../actions/item";
 import ItemService from "../services/user.service.item";
 
-
-
 //Style
 import { Modal, Button} from 'react-bootstrap';
 
@@ -103,7 +101,6 @@ const ManageItems = () => {
       );
   };
 
-  // TODO: change to update
   const handleUpdateItem = (e) => {
     setShow(false);
     setSuccessful(false);

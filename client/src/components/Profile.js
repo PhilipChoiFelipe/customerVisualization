@@ -102,7 +102,6 @@ const Profile = () => {
           <div class="col-md-3">
             <div class="FAIcon"><FontAwesomeIcon icon={faThumbsUp}  size="5x" color="#ffdeea"/></div>
 
-            {/* TODO: get most common fav item id in customers, SQL query?*/}
             <h1 class="display-4">
               <b>
                 {specItem ? specItem['itemName'] : "no favorite item"}

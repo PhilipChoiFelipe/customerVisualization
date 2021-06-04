@@ -40,8 +40,3 @@ create table if not exists UserSignIn (
     SignInTime datetime not null,
     ClientIP varchar(255) not null
 );
-
-
-
-
--- TODO: user sign in log schema 
