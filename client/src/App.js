@@ -7,7 +7,6 @@ import "./App.css";
 
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Home from "./components/Home";
 import Profile from "./components/Profile";
 import ManageItems from "./components/manageItems";
 import ManageCustomers from "./components/ManageCustomers";

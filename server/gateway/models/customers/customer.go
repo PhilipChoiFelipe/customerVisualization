@@ -1,10 +1,5 @@
 package customers
 
-import (
-	// "fmt"
-	
-)
-
 type Customer struct {
 	ID          int64  `json:"id"`
 	UserID      int64  `json:"userId"`
@@ -18,7 +13,6 @@ type Customer struct {
 	DisChannel  string `json:"disChannel"`
 	FavItem     int64  `json:"favItem"`
 }
-
 
 type NameUpdates struct {
 	FirstName string `json:"firstName"`
@@ -44,20 +38,3 @@ func (c *Customer) ApplyNameUpdates(updates *NameUpdates) error {
 	c.LastName = updates.LastName
 	return nil
 }
-
-// // TOASK: do we need update struct?
-// func (c *Customer) ApplyFavItemUpdates(item *items.Item) error {
-// 	if item == nil {
-// 		return fmt.Errorf("empty updating value")
-// 	}
-// 	c.FavItem = item
-// 	return nil
-// }
-
-// func (c *Customer) ApplyLastVistedUpdates(date string) error {
-// 	if len(date) == 0 {
-// 		return fmt.Errorf("empty updating value")
-// 	}
-// 	c.LastVisited = date
-// 	return nil
-// }

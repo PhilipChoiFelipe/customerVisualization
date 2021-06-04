@@ -89,6 +89,9 @@ const vfirstname = (value) => {
     }
   };
 
+/**
+ *@description Component Register returns form that accepts new user with valide information 
+*/
 const Register = () => {
   const form = useRef();
   const checkBtn = useRef();

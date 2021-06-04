@@ -2,7 +2,10 @@ import axios from "axios";
 import authHeader from "./auth-header";
 const API_URL = "https://441final-api.erinchang.me/v1";
 
-
+/**
+ * @description - register sends POST request to the server with an object containing the 
+ * user's information to add the user to the database
+ */
 const register = (userName, email, password, passwordConf, firstName, lastName, storeName) => {
   // console.log("auth.service, line: 7", {userName, email, password, passwordConf, firstName, lastName, storeName});
   return axios.post(API_URL + "/user", {
@@ -16,6 +19,10 @@ const register = (userName, email, password, passwordConf, firstName, lastName, 
   });
 };
 
+/**
+ * @description - login sends POST request to the server with an object 
+ * containing the user's login credentials and store the response data in the local storage
+ */
 const login = async (email, password) => {
   const response = await axios
     .post(API_URL + "/sessions", {
@@ -37,6 +44,10 @@ const login = async (email, password) => {
   return result;
 };
 
+/**
+ * @description - logout sends DELETE request to the server with the user's 
+ * token and remove it from the local storage
+ */
 const logout = async () => {
     console.log("logout");
     localStorage.removeItem("user");

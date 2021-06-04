@@ -1,40 +1,31 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
 
-import { getAllItems, getSpecItem, updateSpecItem } from "../actions/item";
+import { getAllItems } from "../actions/item";
 import ItemService from "../services/user.service.item";
 
-//Style
-import { Modal, Button} from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 
-const required = (value) => {
-  if (!value) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This field is required!
-      </div>
-    );
-  }
-};
 
+/**
+ *@description Component ManageItems returns table of items that user can add, update, and delete
+*/
 const ManageItems = () => {
-  
-  
+
+
   const { user: currentUser } = useSelector((state) => state.auth);
   const { items } = useSelector((state) => state.item);
 
   const form = useRef();
-  const checkBtn = useRef();
 
   //Inserting
   const [itemName, setItemName] = useState("");
   const [price, setPrice] = useState(0);
   const [itemId, setItemId] = useState(0);
-  
+
 
   //Sorting by column name
   const [reverse, setReverse] = useState(false);
@@ -44,7 +35,7 @@ const ManageItems = () => {
   const [show, setShow] = useState(false);
   const [modalTitle, setModalTitle] = useState(null);
 
-  //??
+  //checks
   const [successful, setSuccessful] = useState(false);
   const { message } = useSelector(state => state.message);
 
@@ -55,11 +46,6 @@ const ManageItems = () => {
   if (items && items.length === 0) {
     dispatch(getAllItems(currentUser.id));
   }
-
-  // useEffect(() => {
-  //   dispatch(getAllItems(currentUser.id));
-  // }, [successful, dispatch, currentUser])
-  // // console.log("manageItems: 41",items)
 
   const onChangeItemName = (e) => {
     const itemName = e.target.value;
@@ -72,59 +58,55 @@ const ManageItems = () => {
   };
 
   const handleAddItem = () => {
-    // e.preventDefault();
     setSuccessful(false);
     setShow(false);
-    // form.current.validateAll();
-    // if (checkBtn.current.context._errors.length === 0) {
-      let itemObj = {
-        userId: currentUser.id,
-        itemName: itemName,
-        price: parseInt(price)
+    let itemObj = {
+      userId: currentUser.id,
+      itemName: itemName,
+      price: parseInt(price)
+    }
+    console.log(itemObj);
+    console.log("manageItems: 66", itemObj)
+    ItemService.createItem(currentUser.id, itemObj).then(
+      (response) => {
+        console.log(response.data)
+        dispatch(getAllItems(currentUser.id))
+      },
+      (error) => {
+        const err =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        console.log(err)
       }
-      console.log(itemObj);
-      console.log("manageItems: 66", itemObj)
-      ItemService.createItem(currentUser.id, itemObj).then(
-        (response) => {
-          console.log(response.data)
-          dispatch(getAllItems(currentUser.id))
-        },
-        (error) => {
-          const err =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-            console.log(err)
-        }
-      );
+    );
   };
 
   const handleUpdateItem = (e) => {
     setShow(false);
     setSuccessful(false);
-    // form.current.validateAll();
-      let itemUpdateObj = {
-        itemName: itemName,
-        price: parseInt(price)
+    let itemUpdateObj = {
+      itemName: itemName,
+      price: parseInt(price)
+    }
+    console.log("manageItems: 108", itemUpdateObj)
+    ItemService.updateSpecItem(currentUser.id, itemId, itemUpdateObj).then(
+      (response) => {
+        console.log(response.data)
+        dispatch(getAllItems(currentUser.id))
+      },
+      (error) => {
+        const err =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        console.log(err)
       }
-      console.log("manageItems: 108", itemUpdateObj)
-      ItemService.updateSpecItem(currentUser.id, itemId ,itemUpdateObj).then(
-        (response) => {
-          console.log(response.data)
-          dispatch(getAllItems(currentUser.id))
-        },
-        (error) => {
-          const err =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-            console.log(err)
-        }
-      );
+    );
   };
 
   const handleDeleteItem = () => {
@@ -140,7 +122,7 @@ const ManageItems = () => {
             error.response.data.message) ||
           error.message ||
           error.toString();
-          console.log(err)
+        console.log(err)
       }
     );
   }
@@ -150,7 +132,7 @@ const ManageItems = () => {
       query['reverse'] = !reverse;
       setReverse(!reverse);
     } else {
-    //if clicked column first time, reverse = false
+      //if clicked column first time, reverse = false
       setCurrentSort(query['sort']);
       setReverse(false);
       query['reverse'] = false;
@@ -160,18 +142,17 @@ const ManageItems = () => {
 
   //if clicked column second time, switch reverse
 
-
   const createRows = (items) => {
-    return items.map( item => {
+    return items.map(item => {
       return (
-          <tr className={itemId && item.id === itemId?"table-active":""} key={item.id} onClick={()=>setItemId(item.id)}>
-            <th scope="row">{item.id}</th>
-            <td>{item.itemName}</td>
-            <td>{item.price}</td>
-          </tr>
+        <tr className={itemId && item.id === itemId ? "table-active" : ""} key={item.id} onClick={() => setItemId(item.id)}>
+          <th scope="row">{item.id}</th>
+          <td>{item.itemName}</td>
+          <td>{item.price}</td>
+        </tr>
       );
     })
-    
+
   }
   const handleClose = () => setShow(false);
   const handleShow = (title) => {
@@ -181,13 +162,13 @@ const ManageItems = () => {
 
   return (
     <div>
-      <div className="container">  
+      <div className="container">
         <Modal show={show} onHide={handleClose}>
           <Modal.Header >
             <Modal.Title>{modalTitle}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-          <Form onSubmit={handleUpdateItem} ref={form}>
+            <Form onSubmit={handleUpdateItem} ref={form}>
               <div>
                 <div className="form-group">
                   <label htmlFor="itemName">Item Name</label>
@@ -197,7 +178,6 @@ const ManageItems = () => {
                     name="itemName"
                     value={itemName}
                     onChange={onChangeItemName}
-                    // validations={required}
                   />
                 </div>
 
@@ -209,7 +189,6 @@ const ManageItems = () => {
                     name="price"
                     value={price}
                     onChange={onChangePrice}
-                    // validations={required}
                   />
                 </div>
               </div>
@@ -226,28 +205,28 @@ const ManageItems = () => {
             </Button>}
           </Modal.Footer>
         </Modal>
-      <Button onClick={() => handleShow("Add Item")}>Insert</Button>
-      {itemId ? <><Button onClick={() => handleShow("Update Item")}>Edit</Button>
-      <Button onClick={handleDeleteItem}>Delete</Button> </>: <></>}
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col"><Button variant="light" size="sm" onClick={() => {handleSortItems({sort: "id", reverse})}}>Item ID</Button></th>
-            <th scope="col"><Button variant="light" size="sm" onClick={() => {handleSortItems({sort: "item_name", reverse})}}>Item Name</Button></th>
-            <th scope="col"><Button variant="light" size="sm" onClick={() => {handleSortItems({sort: "price", reverse})}}>Price</Button></th>
-          </tr>
-        </thead>
-        <tbody>
-          {items && items.length > 0 &&
-            createRows(items)
-          }
-        </tbody>
-      </table>
-          {!items && (
-            <div class="alert alert-primary">
-              <h6>No item added yet! Try inserting some items.</h6>
-            </div>
-          )}
+        <Button onClick={() => handleShow("Add Item")}>Insert</Button>
+        {itemId ? <><Button onClick={() => handleShow("Update Item")}>Edit</Button>
+          <Button onClick={handleDeleteItem}>Delete</Button> </> : <></>}
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col"><Button variant="light" size="sm" onClick={() => { handleSortItems({ sort: "id", reverse }) }}>Item ID</Button></th>
+              <th scope="col"><Button variant="light" size="sm" onClick={() => { handleSortItems({ sort: "item_name", reverse }) }}>Item Name</Button></th>
+              <th scope="col"><Button variant="light" size="sm" onClick={() => { handleSortItems({ sort: "price", reverse }) }}>Price</Button></th>
+            </tr>
+          </thead>
+          <tbody>
+            {items && items.length > 0 &&
+              createRows(items)
+            }
+          </tbody>
+        </table>
+        {!items && (
+          <div class="alert alert-primary">
+            <h6>No item added yet! Try inserting some items and remember to fill out every field!</h6>
+          </div>
+        )}
       </div>
     </div>
   );

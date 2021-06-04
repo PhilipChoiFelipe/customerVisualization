@@ -5,6 +5,7 @@ import rootReducer from "./reducers";
 
 const middleware = [thunk];
 
+//store stores root reducer for redux
 const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(...middleware))

@@ -2,6 +2,9 @@ import { SET_MESSAGE, CLEAR_MESSAGE } from "../actions/types";
 
 const initialState = {};
 
+/**
+* @description message stores any updated message during redux dispatch
+*/
 const message = (state = initialState, action) => {
   const { type, payload } = action;
 

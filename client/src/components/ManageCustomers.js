@@ -1,34 +1,25 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
 
-import { getAllCustomers, getSpecCustomers } from "../actions/customer";
+import { getAllCustomers } from "../actions/customer";
 
 import CustomerService from "../services/user.service.customer";
 
 import { Modal, Button} from 'react-bootstrap';
 
-const required = (value) => {
-  if (!value) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This field is required!
-      </div>
-    );
-  }
-};
 
+/**
+ *@description Component ManageCustomers returns table of customers that user can add, update, and delete
+*/
 const ManageCustomers = () => {
   
   const { user: currentUser } = useSelector((state) => state.auth);
   const { customers } = useSelector((state) => state.customer);
 
   const form = useRef();
-  const checkBtn = useRef();
-
 
   //Inserting new Item
   const [firstName, setFirstName] = useState("");
@@ -102,9 +93,7 @@ const ManageCustomers = () => {
 
     setSuccessful(false);
     setShow(false);
-    // form.current.validateAll();
 
-    // if (checkBtn.current.context._errors.length === 0) {
       let customerObj = {
         userId: currentUser.id,
         firstName,
@@ -133,13 +122,11 @@ const ManageCustomers = () => {
         }
       );
 
-    // }
   };
 
   const handleUpdateCustomer = (e) => {
     setShow(false);
     setSuccessful(false);
-    // form.current.validateAll();
       let cusUpdateObj = {
         firstName,
         lastName,
@@ -246,7 +233,6 @@ const ManageCustomers = () => {
                     name="firstName"
                     value={firstName}
                     onChange={onChangeFirstName}
-                    // validations={required}
                   />
                 </div>
 
@@ -258,7 +244,6 @@ const ManageCustomers = () => {
                     name="lastName"
                     value={lastName}
                     onChange={onChangeLastName}
-                    // validations={required}
                   />
                 </div>
 
@@ -273,14 +258,6 @@ const ManageCustomers = () => {
                     <option value="Latin">Latin</option>
                     <option value="Pacific Islander">Pacific Islander</option>
                   </select>
-                  {/* <Input
-                    type="text"
-                    className="form-control"
-                    name="ethnicity"
-                    value={ethnicity}
-                    onChange={onChangeEthnicity}
-                    // validations={required}
-                  /> */}
                 </div>
 
                 <div className="form-group">
@@ -291,14 +268,6 @@ const ManageCustomers = () => {
                     <option value="Female">Female</option>
                     <option value="Others">Don't want to answer</option>
                   </select>
-                  {/* <Input
-                    type="text"
-                    className="form-control"
-                    name="gender"
-                    value={gender}
-                    onChange={onChangeGender}
-                    // validations={required}
-                  /> */}
                 </div>
 
                 <div className="form-group">
@@ -310,7 +279,6 @@ const ManageCustomers = () => {
                     value={birthday}
                     onChange={onChangeBirthday}
                     placeholder={"YYYY-MM-DD"}
-                    // validations={required}
                   />
                 </div>
 
@@ -322,7 +290,6 @@ const ManageCustomers = () => {
                     name="postalCode"
                     value={postalCode}
                     onChange={onChangePostalCode}
-                    // validations={required}
                   />
                 </div>
 
@@ -335,7 +302,6 @@ const ManageCustomers = () => {
                     value={lastVisited}
                     onChange={onChangeLastVisited}
                     placeholder={"YYYY-MM-DD"}
-                    // validations={required}
                   />
                 </div>
 
@@ -351,14 +317,6 @@ const ManageCustomers = () => {
                     <option value="Youtube">Youtube</option>
                     <option value="Friends">Friends</option>
                   </select>
-                  {/* <Input
-                    type="text"
-                    className="form-control"
-                    name="disChannel"
-                    value={disChannel}
-                    onChange={onChangeDisChannel}
-                    // validations={required}
-                  /> */}
                 </div>
 
                 <div className="form-group">
@@ -369,7 +327,6 @@ const ManageCustomers = () => {
                     name="favItem"
                     value={favItem}
                     onChange={onChangeFavItem}
-                    // validations={required}
                   />
                 </div>
 
@@ -413,7 +370,7 @@ const ManageCustomers = () => {
       </table>
         {!customers && (
           <div class="alert alert-primary">
-            <h6>No customer added yet! Try inserting some customers.</h6>
+            <h6>No customer added yet! Try inserting some customers and remember to fill out every field!</h6>
           </div>
         )}
       

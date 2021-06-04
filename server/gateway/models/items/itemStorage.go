@@ -38,35 +38,8 @@ func (is *ItemStorage) GetById(id int64) (*Item, error) {
 func (is *ItemStorage) GetItems(userId int64, queryCase string, col_name string, reverse string) ([]*Item, error) {
 
 	query := "select * from items where user_id = ?"
-	// rows, err := is.DB.Query("select * from items where user_id = ?", userId)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("%v: %v", ErrItemNotFound, err)
-	// }
-	// var rows *sql.Rows
-	// var err error
-	// var values []interface{}
+
 	var items []*Item
-	// switch queryCase {
-	// case "default":
-	// 	// values = append(values, user_id)
-	// 	rows, err = is.DB.Query(query, user_id)
-	// case "sort":
-	// 	if reverse == "true" {
-	// 		query = "select * from items where user_id = ? order by ? DESC"
-	// 	} else {
-	// 		query = "select * from items where user_id = ? order by ? ASC"
-	// 	}
-	// 	// values = append(values, user_id, col_name)
-	// 	rows, err = is.DB.Query(query, user_id, col_name)
-	// }
-	// log.Println(userId)
-	// log.Println(queryCase)
-	// log.Println(query)
-	// log.Println(col_name)
-	// log.Println(reverse)
-	// if err != nil {
-	// 	log.Println(fmt.Sprintf("err: %v", err.Error()))
-	// }
 
 	rows, err := is.DB.Query(query, userId)
 	if err != nil {
@@ -119,7 +92,7 @@ func (is *ItemStorage) Update(id int64, updates *ItemUpdate) (*Item, error) {
 	return is.GetById(id)
 }
 
-//Delete deletes item with given ID
+//Delete deletes item with given item ID
 func (is *ItemStorage) Delete(id int64) error {
 	delq := "delete from items where id = ?"
 	_, err := is.DB.Exec(delq, id)
@@ -130,6 +103,7 @@ func (is *ItemStorage) Delete(id int64) error {
 	return nil
 }
 
+//Delete deletes item with given user ID
 func (is *ItemStorage) DeleteAllbyUserId(userId int64) error {
 	delq := "delete from items where user_id = ?"
 	_, err := is.DB.Exec(delq, userId)

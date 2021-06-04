@@ -80,12 +80,10 @@ func main() {
 	router.HandleFunc("/v1/user/{user_id}/items", httpHandler.ItemsHandler)
 	router.HandleFunc("/v1/user/{user_id}/items/{item_id}", httpHandler.SpecificItemHandler)
 
-
 	http.Handle("/", router)
 
 	wrappedMux := handlers.NewCORSHandler(router)
 
 	log.Printf("server is listening at port: %s", addr)
 	log.Fatal(http.ListenAndServeTLS(addr, tlsCertPath, tlsKeyPath, wrappedMux))
-	// log.Fatal(http.ListenAndServe(addr, wrappedMux))
 }

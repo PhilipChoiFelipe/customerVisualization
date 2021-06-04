@@ -1,25 +1,22 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useSelector } from 'react-redux';
-// import customers from "../data/customers.json";
 import {
     VictoryPie,
     VictoryBar,
     VictoryTheme,
-    VictoryAxis,
     VictoryChart,
-    VictoryStack,
     VictoryVoronoiContainer,
     VictoryTooltip,
-    VictoryContainer
 } from 'victory';
 import _ from "lodash";
-import { Button} from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
-//ethnicity => number 
-//# customers by date 
-/*
+
+/** 
+* @description
+[data field]ToCus convert customer data to max count
 {
-    ethnicity: ''
+    [data field]: ''
     count: ''
 }
 */
@@ -36,16 +33,13 @@ const ethToCus = (customers) => {
         <VictoryPie
             data={dataToViz}
             labels={({ datum }) => `${datum.ethnicity}: ${datum.count}`}
-            // label = "ethnicity"
             width={600}
             x="ethnicity"
             y="count"
-            colorScale={["tomato", "orange", "gold", "cyan", "navy" ]}
-            // labelRadius={({ innerRadius }) => innerRadius + 50 }
-            // containerComponent={<VictoryContainer responsive={false}/>}
+            colorScale={["tomato", "orange", "gold", "cyan", "navy"]}
             cornerRadius={({ datum }) => datum.count}
         />
-        );
+    );
 }
 
 const disToCus = (customers) => {
@@ -59,26 +53,25 @@ const disToCus = (customers) => {
     }
     return (
         <VictoryChart
-        theme={VictoryTheme.material}
-        containerComponent={<VictoryVoronoiContainer/>}
-        width={600}
-        // height={200}
+            theme={VictoryTheme.material}
+            containerComponent={<VictoryVoronoiContainer />}
+            width={600}
         >
-        <VictoryBar
-            data={dataToViz}
-            label = "disChannel"
-            x="disChannel"
-            y="count"
-            labelRadius={({ innerRadius }) => innerRadius + 50 }
-            labelComponent={<VictoryTooltip/>}
-            containerComponent={<VictoryVoronoiContainer/>}
+            <VictoryBar
+                data={dataToViz}
+                label="disChannel"
+                x="disChannel"
+                y="count"
+                labelRadius={({ innerRadius }) => innerRadius + 50}
+                labelComponent={<VictoryTooltip />}
+                containerComponent={<VictoryVoronoiContainer />}
             />
-            </VictoryChart>
-        );
+        </VictoryChart>
+    );
 }
 
 const gendToCus = (customers) => {
-    
+
     let temp = _.countBy(customers, 'gender')
     let dataToViz = []
     for (let key in temp) {
@@ -94,28 +87,27 @@ const gendToCus = (customers) => {
             labels={({ datum }) => `${datum.gender}: ${datum.count}`}
             x="gender"
             y="count"
-            colorScale={["tomato", "orange", "gold", "cyan", "navy" ]}
-            // labelRadius={({ innerRadius }) => innerRadius + 50 }
-            containerComponent={<VictoryContainer responsive={true}/>}
+            colorScale={["tomato", "orange", "gold", "cyan", "navy"]}
             cornerRadius={({ datum }) => datum.count}
         />
-        );
+    );
 }
 
-
-
+/**
+ *@description Visualization visualize customers with different data field
+*/
 const Visualization = () => {
     const [visType, setVisType] = useState(null);
 
     const { customers } = useSelector((state) => state.customer);
-    return(
+    return (
         <div className="container">
-        <h1>
-            Visualize your customers type
+            <h1>
+                Visualize your customers type
         </h1>
-        <Button variant="success" onClick={()=>setVisType(()=>gendToCus(customers))}>Gender</Button>
-        <Button variant="warning" onClick={()=>setVisType(()=>disToCus(customers))}>Discovered Channel</Button>
-        <Button variant="info" onClick={()=>setVisType(()=>ethToCus(customers))}>Ethnicity</Button>
+            <Button variant="success" onClick={() => setVisType(() => gendToCus(customers))}>Gender</Button>
+            <Button variant="warning" onClick={() => setVisType(() => disToCus(customers))}>Discovered Channel</Button>
+            <Button variant="info" onClick={() => setVisType(() => ethToCus(customers))}>Ethnicity</Button>
             {visType}
         </div>
     );

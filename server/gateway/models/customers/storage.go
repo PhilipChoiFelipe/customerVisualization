@@ -15,6 +15,7 @@ var ErrCustomerNotDeleted = errors.New("failed to delete customer")
 type Storage interface {
 	//GetByID returns the customer with the given ID
 	GetById(customer_id int64) (*Customer, error)
+
 	//GetByItemId returns the customer
 	GetByItemId(item_id int64) ([]*Customer, error)
 

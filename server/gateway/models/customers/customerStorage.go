@@ -70,13 +70,11 @@ func (cs *CustomerStorage) GetCustomers(user_id int64, queryCase string, col_nam
 	var result []*Customer
 
 	query := "select id, user_id, first_name, last_name, ethnicity, gender, birthday, postal_code, last_visited, dis_channel, fav_item from customers where user_id = ?"
-	// var values []interface{}
 	var rows *sql.Rows
 	var err error
 
 	switch queryCase {
 	case "default":
-		// values = append(values, user_id)
 		rows, err = cs.sqlsess.Query(query, user_id)
 		if err != nil {
 			return nil, err
@@ -92,50 +90,7 @@ func (cs *CustomerStorage) GetCustomers(user_id int64, queryCase string, col_nam
 		if err != nil {
 			return nil, err
 		}
-
-		// values = append(values, user_id, col_name)
-		// case "sortBefore":
-		// 	if reverse == "true" {
-		// 		query = fmt.Sprintf("select * from customers where user_id = ? and ? < ? order by %s DESC", col_name)
-
-		// 		// query = "select * from customers where user_id = ? and ? <= ? order by ? DESC"
-		// 		// values = append(values, user_id, col_name, beforeDate, col_name)
-		// 	} else {
-		// 		query = fmt.Sprintf("select * from customers where user_id = ? and ? < ? order by %s ASC", col_name)
-		// 		// values = append(values, user_id, col_name, beforeDate, col_name)
-		// 	}
-		// 	const RFC3339FullDate = "2006-01-02"
-		// 	datetime, err := time.Parse(RFC3339FullDate, beforeDate)
-		// 	if err != nil {
-		// 		return nil, err
-		// 	}
-		// 	rows, err = cs.sqlsess.Query(query, user_id, col_name, datetime)
-		// 	if err != nil {
-		// 		return nil, err
-		// 	}
-
-		// case "sortAfter":
-		// 	if reverse == "true" {
-		// 		query = fmt.Sprintf("select * from customers where (user_id = ? and %s > STR_TO_DATE(%s,'%Y-%m-%d')) order by %s DESC", col_name, afterDate, col_name)
-		// 		// values = append(values, user_id, col_name, beforeDate, col_name)
-		// 	} else {
-		// 		query = fmt.Sprintf("select * from customers where (user_id = ? and %s > ?) order by %s ASC", col_name, col_name)
-		// 		// values = append(values, user_id, col_name, beforeDate, col_name)
-		// 	}
-		// 	const RFC3339FullDate = "2006-01-02"
-		// 	datetime, err := time.Parse(RFC3339FullDate, afterDate)
-		// 	log.Printf("date: %v", datetime)
-		// 	if err != nil {
-		// 		return nil, err
-		// 	}
-		// 	rows, err = cs.sqlsess.Query(query, user_id, afterDate)
-		// 	if err != nil {
-		// 		return nil, err
-		// 	}
 	}
-
-	// rows, err := cs.sqlsess.Query(query, values)
-	// rows, err := cs.sqlsess.Query(query, user_id)
 	log.Println("query:", query)
 
 	if err != nil {
@@ -193,8 +148,7 @@ func (cs *CustomerStorage) Delete(customerId int64) error {
 	return nil
 }
 
-//
-
+//Delete deletes customer with given user id
 func (cs *CustomerStorage) DeleteAllbyUserId(userId int64) error {
 	delq := "delete from customers where user_id = ?"
 	_, err := cs.sqlsess.Exec(delq, userId)

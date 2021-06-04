@@ -18,6 +18,9 @@ const required = (value) => {
   }
 };
 
+/**
+ *@description Component Login returns signin form that gets user's credential and redirects to user's profile
+*/
 const Login = (props) => {
   const form = useRef();
   const checkBtn = useRef();

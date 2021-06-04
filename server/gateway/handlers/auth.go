@@ -92,9 +92,6 @@ func (hh *HttpHandler) SpecificUserHandler(w http.ResponseWriter, r *http.Reques
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}
-		// fmt.Printf("USERID: %v", userId)
-
-		// fmt.Printf("GOT USER: %v", user)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(user)
