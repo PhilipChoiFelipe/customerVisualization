@@ -9,6 +9,7 @@ import { getAllCustomers } from "../actions/customer";
 import CustomerService from "../services/user.service.customer";
 
 import { Modal, Button} from 'react-bootstrap';
+import { getAllItems } from "../actions/item";
 
 
 /**
@@ -18,8 +19,7 @@ const ManageCustomers = () => {
   
   const { user: currentUser } = useSelector((state) => state.auth);
   const { customers } = useSelector((state) => state.customer);
-
-  const form = useRef();
+  const { items } = useSelector((state) => state.item);
 
   //Inserting new Item
   const [firstName, setFirstName] = useState("");
@@ -49,6 +49,10 @@ const ManageCustomers = () => {
 
   if (customers && customers.length === 0) {
     dispatch(getAllCustomers(currentUser.id));
+  }
+
+  if (items && items.length === 0) {
+    dispatch(getAllItems(currentUser.id));
   }
 
   const onChangeFirstName = (e) => {
@@ -222,7 +226,7 @@ const ManageCustomers = () => {
             <Modal.Title>{modalTitle}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-          <Form onSubmit={handleUpdateCustomer} ref={form}>
+          <Form onSubmit={handleUpdateCustomer}>
               <div>
 
                 <div className="form-group">
@@ -321,13 +325,22 @@ const ManageCustomers = () => {
 
                 <div className="form-group">
                   <label htmlFor="favItem">Favorite Item ID</label>
-                  <Input
+                  <select class="form-select" aria-label="Default select example" onChange={onChangeFavItem}>
+                  <option selected>Channel</option>
+                  {items && items.length > 0 ? 
+                  
+                  items.map(item => 
+                    <option value={item.id}>{item.itemName} ${item.price}</option>
+                  ) : <option value="None">Insert Item First</option>
+                  }
+                  </select>
+                  {/* <Input
                     type="text"
                     className="form-control"
                     name="favItem"
                     value={favItem}
                     onChange={onChangeFavItem}
-                  />
+                  /> */}
                 </div>
 
               </div>
